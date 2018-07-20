@@ -1,16 +1,12 @@
-// app.scss
-
 
 // Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+@import url('https://fonts.googleapis.com/css?family=Nunito');
 
 // Variables
-@import "variables";
+@import 'variables';
 
-@import '~admin-lte/node_modules/bootstrap/dist/css/bootstrap.min.css'; 
-@import '~admin-lte/dist/css/adminlte.css';
-@import '~admin-lte/dist/css/skins/_all-skins.css';
-
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
 
 .navbar-laravel {
   background-color: #fff;
