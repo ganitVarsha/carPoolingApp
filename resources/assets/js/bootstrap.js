@@ -1,3 +1,5 @@
+// bootstrap.js
+
 
 window._ = require('lodash');
 window.Popper = require('popper.js').default;
@@ -13,6 +15,8 @@ try {
 
     require('bootstrap');
 } catch (e) {}
+
+require('admin-lte');
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
