@@ -72,9 +72,9 @@ return [
       |
      */
     'dashboard_url' => 'home',
-    'logout_url' => 'logout',
-    'logout_method' => null,
-    'login_url' => 'login',
+    'logout_url' => 'admin/logout',
+    'logout_method' => 'GET',
+    'login_url' => 'admin/login',
     'register_url' => null,
     /*
       |--------------------------------------------------------------------------

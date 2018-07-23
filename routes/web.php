@@ -24,3 +24,9 @@ Route::get('admin', function () {
     return view('admin');
 
 });
+Route::get('admin/login', function () {
+    return view('auth/adminLogin');
+});
+Route::get('admin/logout', function () {
+    return view('auth/adminLogout');
+});
