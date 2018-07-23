@@ -21,3 +21,5 @@ Route::get('admin', 'HomeController@admin')->middleware('admin');
 Route::get('/', function () {
     return view('auth.login');
 })->middleware('guest');
+
+Route::resource('users','UserController');

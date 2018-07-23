@@ -98,8 +98,19 @@ return [
         ],
             [
             'text' => 'User',
-            'url' => 'admin/user',
             'icon' => 'user',
+            'submenu' => [
+                    [
+                    'text' => 'Users List',
+                    'icon_color' => 'yellow',
+                    'url' => 'users',
+                ],
+                    [
+                    'text' => 'Add User',
+                    'icon_color' => 'green',
+                    'url' => 'users/create',
+                ],
+            ],
         ],
             [
             'text' => 'Revenue',

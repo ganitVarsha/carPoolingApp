@@ -33,6 +33,10 @@ Documentation on : https://github.com/JeroenNoten/Laravel-AdminLTE
     update home controller
     use  if(auth()->user()->isAdmin == 1) to check if user is admin
 
+10. Creating New User :
+    - php artisan make:controller UserController --resource
+    - add route Route::resource('users','UserController');
+    - create all CRUD on User using link https://appdividend.com/2018/02/23/laravel-5-6-crud-tutorial/
 
 Note:
 1. To store git credentials: git config credential.helper store
