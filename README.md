@@ -38,5 +38,15 @@ Documentation on : https://github.com/JeroenNoten/Laravel-AdminLTE
     - add route Route::resource('users','UserController');
     - create all CRUD on User using link https://appdividend.com/2018/02/23/laravel-5-6-crud-tutorial/
 
+11. Setup forgot password
+    change in .evn file, clear cache with "php artisan config:cache" and restart server 
+
+    MAIL_DRIVER=smtp
+    MAIL_HOST=smtp.googlemail.com
+    MAIL_PORT=587
+    MAIL_USERNAME=mittalvarsha356@gmail.com
+    MAIL_PASSWORD="skrl qgfo nfux xlgp" //this is app password
+    MAIL_ENCRYPTION=tls
+
 Note:
 1. To store git credentials: git config credential.helper store
