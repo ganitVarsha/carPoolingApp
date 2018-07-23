@@ -41,7 +41,7 @@
                 <p>Cancelled Trips</p>
             </div>
             <div class="icon">
-                <i class="ion ion-stats-bars"></i>
+                <i class="ion ion-android-cancel"></i>
             </div>
         </div>
     </div>
@@ -97,7 +97,7 @@
                 <p>Total Revenue</p>
             </div>
             <div class="icon">
-                <i class="ion ion-female"></i>
+                <i class="ion ion-arrow-graph-up-right"></i>
             </div>
         </div>
     </div>
