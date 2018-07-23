@@ -26,3 +26,7 @@ Documentation on : https://github.com/JeroenNoten/Laravel-AdminLTE
     php artisan make:seeder UsersTableSeeder
     regenrate composer's autoload : composer dump-autoload
     run seed : php artisan db:seed --class=UsersTableSeeder ( for specific seed )
+
+
+Note:
+1. To store git credentials: git config credential.helper store
