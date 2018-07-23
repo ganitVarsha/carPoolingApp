@@ -36,11 +36,11 @@
     </div>
     <div class="row">
         <div class="col-md-4">
-            <label for="isAdmin">Is Admin:</label></div>
+            <label for="isAdmin">Role:</label></div>
         <div class="form-group col-md-4">
             <select name='isAdmin' style="width: 100%">
-                <option value ='1' <?php echo ($user->isAdmin) ? 'selected' : ''; ?> >Yes</option>
-                <option value ='0' <?php echo ($user->isAdmin) ? '' : 'selected'; ?> >No</option>
+                <option value ='1' <?php echo ($user->isAdmin) ? 'selected' : ''; ?> >Admin</option>
+                <option value ='0' <?php echo ($user->isAdmin) ? '' : 'selected'; ?> >Others</option>
             </select>
         </div>
     </div>

@@ -35,11 +35,11 @@
         </div>
         <div class="row">
             <div class="col-md-4">
-                <label for="isAdmin">Is Admin:</label></div>
+                <label for="isAdmin">Role:</label></div>
             <div class="form-group col-md-4">
                 <select name='isAdmin' style="width: 100%">
-                    <option value ='1'>Yes</option>
-                    <option value ='0' selected>No</option>
+                    <option value ='1'>Admin</option>
+                    <option value ='0' selected>Others</option>
                 </select>
             </div>
         </div>
