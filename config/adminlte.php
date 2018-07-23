@@ -25,8 +25,8 @@ return [
       | variant, used for the mini side bar. Make it 3 letters or so
       |
      */
-    'logo' => '<b>Admin</b> Login',
-    'logo_mini' => '<b>A</b>L',
+    'logo' => '<b>Admin</b>Panel',
+    'logo_mini' => '<b>A</b>P',
     /*
       |--------------------------------------------------------------------------
       | Skin Color
@@ -71,10 +71,10 @@ return [
       | Set register_url to null if you don't want a register link.
       |
      */
-    'dashboard_url' => 'home',
-    'logout_url' => 'admin/logout',
-    'logout_method' => 'GET',
-    'login_url' => 'admin/login',
+    'dashboard_url' => 'admin',
+    'logout_url' => 'logout',
+    'logout_method' => null,
+    'login_url' => 'login',
     'register_url' => null,
     /*
       |--------------------------------------------------------------------------

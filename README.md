@@ -27,6 +27,12 @@ Documentation on : https://github.com/JeroenNoten/Laravel-AdminLTE
     regenrate composer's autoload : composer dump-autoload
     run seed : php artisan db:seed --class=UsersTableSeeder ( for specific seed )
 
+9. Created middleware and updated login file to redirect to admin panel
+    php artisan make:middleware Admin
+    update its function
+    update home controller
+    use  if(auth()->user()->isAdmin == 1) to check if user is admin
+
 
 Note:
 1. To store git credentials: git config credential.helper store
