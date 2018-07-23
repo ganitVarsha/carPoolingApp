@@ -12,7 +12,7 @@ return [
       |
      */
 
-    'title' => 'SmartPool | Admin',
+    'title' => 'SmartPool | Login',
     'title_prefix' => '',
     'title_postfix' => '',
     /*

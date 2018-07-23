@@ -11,17 +11,13 @@
   |
  */
 
-Route::get('/', function () {
-//    if (empty(auth()->user())) {
-        return view('auth/adminLogin');
-//    } else {
-//        route('dashboard');
-//        die;
-//    }
-});
 
 Auth::routes();
 
-Route::get('/dashboard', 'HomeController@index')->name('home');
+Route::get('dashboard', 'HomeController@index')->name('home');
 
 Route::get('admin', 'HomeController@admin')->middleware('admin');
+
+Route::get('/', function () {
+    return view('auth.login');
+})->middleware('guest');
