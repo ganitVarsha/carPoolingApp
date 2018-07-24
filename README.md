@@ -58,3 +58,9 @@ Note:
     -  git config --global diff.tool meld
     -  git config --global merge.tool meld
     -  git config --global mergetool.meld.path "C:\Program Files (x86)\Meld\Meld.exe"
+3. Create migration :   php artisan make:migration create_users_table
+    - run migration :   php artisan migrate
+4. Create Seeder file : php artisan make:seeder SettingsTableSeeder
+    - run seeder :  composer dump-autoload
+                    php artisan db:seed
+                    php artisan db:seed --class=SettingsTableSeeder
