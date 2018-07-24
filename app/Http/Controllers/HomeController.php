@@ -49,6 +49,7 @@ class HomeController extends Controller {
                 ->addRow(['Sunday', 60]);
         $chart = $lava->AreaChart('Booking', $booking,[
             'title' => 'Booking Stats',
+            'pointSize' => 5,
         ]);
         return view('admin', [
             'lava' => $lava,
