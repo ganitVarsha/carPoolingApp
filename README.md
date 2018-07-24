@@ -48,5 +48,9 @@ Documentation on : https://github.com/JeroenNoten/Laravel-AdminLTE
     MAIL_PASSWORD="skrl qgfo nfux xlgp" //this is app password
     MAIL_ENCRYPTION=tls
 
+12. Added graph :
+    - Used Lavacharts http://lavacharts.com/#install
+    - Keep the usage via $lava only and pass the variables to view as required
+
 Note:
 1. To store git credentials: git config credential.helper store
