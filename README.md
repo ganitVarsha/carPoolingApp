@@ -54,3 +54,7 @@ Documentation on : https://github.com/JeroenNoten/Laravel-AdminLTE
 
 Note:
 1. To store git credentials: git config credential.helper store
+2. Added meld as difftool and mergetool on git , Download meld and run following commands
+    -  git config --global diff.tool meld
+    -  git config --global merge.tool meld
+    -  git config --global mergetool.meld.path "C:\Program Files (x86)\Meld\Meld.exe"
