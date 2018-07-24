@@ -18,6 +18,11 @@ Route::get('dashboard', 'HomeController@index')->name('home');
 
 Route::get('admin', 'HomeController@admin')->middleware('admin');
 
+Route::get('settings/app', 'SettingController@app')->middleware('admin');
+Route::get('settings/page', 'SettingController@page')->middleware('admin');
+Route::get('settings/web', 'SettingController@web')->middleware('admin');
+Route::put('settings/web', 'SettingController@webUpdate')->middleware('admin');
+
 Route::get('/', function () {
     return view('auth.login');
 })->middleware('guest');

@@ -124,17 +124,17 @@ return [
                     [
                     'text' => 'Web Settings',
                     'icon_color' => 'yellow',
-                    'url' => '#',
+                    'url' => '/settings/web',
                 ],
                     [
                     'text' => 'Pages Settings',
                     'icon_color' => 'green',
-                    'url' => '#',
+                    'url' => '/settings/page',
                 ],
                     [
                     'text' => 'App Settings',
                     'icon_color' => 'red',
-                    'url' => '#',
+                    'url' => '/settings/app',
                 ],
             ],
         ],
