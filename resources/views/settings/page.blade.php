@@ -1,8 +1,13 @@
 <!DOCTYPE html>
 @extends('adminlte::page')
-@section('title', 'Add User')
+@section('title', 'Page Settings')
 @section('content_header')
-
+<style>
+    .form-group textarea{
+        width: 100%;
+        height: 100px;
+    }
+</style>
 <h1>Add User</h1>
 
 @stop
@@ -10,112 +15,94 @@
 <!-- Main content -->
 @section('content')
 
-    <form method="post" action="{{url('users')}}">
-        @csrf
-        <div class="row">
-            <div class="col-md-4">
-                <label for="Name">First Name:</label></div>
-            <div class="form-group col-md-4">
-                <input type="text" class="form-control" name="first_name">
-            </div>
+<br>
+
+<?php if ($updated) { ?>
+    <div class="alert alert-success">
+        <p>{{ 'Settings updated successfully!' }}</p>
+    </div><br />
+<?php } ?>
+
+<form method="post" action="{{url('settings/page')}}" enctype="multipart/form-data">
+    @csrf
+    {{ method_field('PUT')}}
+    <div class="row">
+        <div class="col-md-3">
         </div>
-        <div class="row">
-            <div class="col-md-4">
-                <label for="Name">Last Name:</label></div>
-            <div class="form-group col-md-4">
-                <input type="text" class="form-control" name="last_name">
-            </div>
+        <div class="col-md-6">
+            <b> Value </b>
         </div>
-        <div class="row">
-            <div class="col-md-4">
-                <label for="Email">Email:</label></div>
-            <div class="form-group col-md-4">
-                <input type="email" class="form-control" name="email" >
-            </div>
+        <div class="form-group col-md-3">
+            <b> Is Active </b>
         </div>
-        <div class="row">
-            <div class="col-md-4">
-                <label for="isAdmin">Role:</label></div>
-            <div class="form-group col-md-4">
-                <select name='isAdmin' style="width: 100%">
-                    <option value ='1'>Admin</option>
-                    <option value ='0' selected>Others</option>
-                </select>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="about_us">About Us</label></div>
+        <div class="form-group col-md-6">
+            <textarea name="about_us[name]"> <?php echo (!empty($list)) ? $list['about_us']->value : ''; ?> </textarea>
         </div>
-        <div class="row">
-            <div class="col-md-4">
-                <label for="Number">Password:</label></div>
-            <div class="form-group col-md-4">
-                <input type="password" class="form-control" name="password" id="password">
-            </div>
+        <div class="form-group col-md-3">
+            <input type="checkbox" name="about_us[active]" <?php echo(!empty($list) && $list['about_us']->is_active) ? 'checked' : ''; ?> />
         </div>
-        <div class="row">
-            <div class="col-md-4">
-                <label for="Number">Confirm Password:</label></div>
-            <div class="form-group col-md-4">
-                <input type="text" class="form-control" name="confirm_password" id="confirm_password">
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="contact_us">Contact Us</label></div>
+        <div class="form-group col-md-6">
+            <textarea name="contact_us[name]"> <?php echo (!empty($list)) ? $list['contact_us']->value : ''; ?> </textarea>
         </div>
-        <div class="row password-error" style="display: none;">
-            <div class="col-md-4"></div>
-            <div class="form-group col-md-4">
-                <span style="color : red">Passwords don't match.</span>
-            </div>
+        <div class="form-group col-md-3">
+            <input type="checkbox" name="contact_us[active]" <?php echo(!empty($list) && $list['contact_us']->is_active) ? 'checked' : ''; ?> />
         </div>
-        <div class="row">
-            <div class="form-group col-md-4">
-                <button type="submit" class="btn btn-success">Submit</button>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="terms_and_conditions">Terms &amp; Conditions</label></div>
+        <div class="form-group col-md-6">
+            <textarea name="terms_and_conditions[name]"> <?php echo (!empty($list)) ? $list['terms_and_conditions']->value : ''; ?> </textarea>
         </div>
-    </form>
+        <div class="form-group col-md-3">
+            <input type="checkbox" name="terms_and_conditions[active]" <?php echo(!empty($list) && $list['terms_and_conditions']->is_active) ? 'checked' : ''; ?> />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="privacy_policies">Privacy Policy</label></div>
+        <div class="form-group col-md-6">
+            <textarea name="privacy_policies[name]"> <?php echo (!empty($list)) ? $list['privacy_policies']->value : ''; ?> </textarea>
+        </div>
+        <div class="form-group col-md-3">
+            <input type="checkbox" name="privacy_policies[active]" <?php echo(!empty($list) && $list['privacy_policies']->is_active) ? 'checked' : ''; ?> />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="refund_policies">Refund Policies</label></div>
+        <div class="form-group col-md-6">
+            <textarea name="refund_policies[name]"> <?php echo (!empty($list)) ? $list['refund_policies']->value : ''; ?> </textarea>
+        </div>
+        <div class="form-group col-md-3">
+            <input type="checkbox" name="refund_policies[active]" <?php echo(!empty($list) && $list['refund_policies']->is_active) ? 'checked' : ''; ?> />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="faq">FAQs</label></div>
+        <div class="form-group col-md-6">
+            <textarea name="faq[name]"> <?php echo (!empty($list)) ? $list['faq']->value : ''; ?> </textarea>
+        </div>
+        <div class="form-group col-md-3">
+            <input type="checkbox" name="faq[active]" <?php echo(!empty($list) && $list['faq']->is_active) ? 'checked' : ''; ?> />
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <button type="submit" class="btn btn-success">Submit</button>
+        </div>
+    </div>
+</form>
 
 @stop
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>  
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  
-<script>
-$(document).ready(function () {
-    $('button[type="submit"]').click(function () {
-        var isValid = true;
-        console.log($('#confirm_password').val());
-        console.log($('#password').val());
-        if ($('#password').val() !== $('#confirm_password').val()) {
-            $('.password-error').css('display', 'block');
-            $("#password, #confirm_password").css({
-                "border": "1px solid red",
-                "background": "#FFCECE"
-            });
-            isValid = false;
-        }
-        if (isValid === true) {
-            $('.password-error').css('display', 'none');
-            $("#password, #confirm_password").css({
-                "border": "",
-                "background": ""
-            });
-            $('input[type="text"], input[type="password"], input[type="email"]').each(function () {
-                if ($.trim($(this).val()) == '') {
-                    isValid = false;
-                    $(this).css({
-                        "border": "1px solid red",
-                        "background": "#FFCECE"
-                    });
-                } else {
-                    $(this).css({
-                        "border": "",
-                        "background": ""
-                    });
-                }
-            });
-        }
-        if (isValid === false) {
-            $('button[type="submit"]').prop('disabled', true);
-        } else {
-            $('button[type="submit"]').prop('disabled', false);
-        }
-    });
-    $('input').focusout(function () {
-        $('button[type="submit"]').prop('disabled', false);
-    });
-});
-</script>
+
+@extends('common.footer')

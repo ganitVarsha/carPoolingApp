@@ -36,11 +36,30 @@ class SettingController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function page() {
+    public function page($updated = false) {
+        $list = Setting::execute('getValuesBasedOnScope', ['scope' => 'Page']);
+//        $commonFunction = new Common; //error in accessing the class
+//        $list = $commonFunction->mapArray($list, 'settings_name');
+        $list = $this->mapArray($list, 'settings_name');
         if (auth()->user()->isAdmin == 1) {
-            return view('settings.page');
+            return view('settings.page', [
+                'list' => $list,
+                'updated' => $updated
+            ]);
         } else {
             return view('home');
+        }
+    }
+    
+     /**
+     * Update the application Page Settings.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function pageUpdate() {
+        $update = Setting::execute('updateValues', ['fields' => $_POST]);
+        if($update){
+            return $this->page(true);
         }
     }
     

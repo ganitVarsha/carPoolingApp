@@ -12,6 +12,7 @@ class Setting extends Model {
      * @params array $params Array of the parameters to be passed in the function
      * @return int/array/string Depends on what the function returns
      * @author Varsha Mittal <varsha.mittal@ganitsoftech.com>
+     * @since 24-07-2018
      */
     public static function execute($functionName = '', $params = []) {
         try {
@@ -29,6 +30,7 @@ class Setting extends Model {
      * @params array $params [scope]
      * @return array list of all the configurable values in that scope
      * @author Varsha Mittal <varsha.mittal@ganitsoftech.com>
+     * @since 24-07-2018
      */
     private function getValuesBasedOnScope($params) {
         $scope = $params['scope'];
@@ -44,28 +46,35 @@ class Setting extends Model {
      * @params array $params [column=>value]
      * @return array list of all the configurable values in that scope
      * @author Varsha Mittal <varsha.mittal@ganitsoftech.com>
+     * @since 24-07-2018
      */
     private function updateValues($params) {
         unset($params['fields']['_token']);
         unset($params['fields']['_method']);
-        foreach ($params['files'] as $setting_name => $val) {
-            if ($val['tmp_name']['name'] != '') {
-                DB::table('settings')
-                        ->where('settings_name', $setting_name)
-                        ->update(['value' => $val['tmp_name']['name'], 'is_active' => ((isset($params['fields'][$setting_name]['active']) && ($params['fields'][$setting_name]['active'] == 'on')) ? '1' : '0')]);
-                unset($params['fields'][$setting_name]);
-            } else {
-                $params['fields'][$setting_name]['name'] = '';
+        
+        //error : file values are manupilated if the are empty
+        if (isset($params['files'])) {
+            foreach ($params['files'] as $setting_name => $val) {
+                if ($val['tmp_name']['name'] != '') {
+                    DB::table('settings')
+                            ->where('settings_name', $setting_name)
+                            ->update(['value' => $val['tmp_name']['name'], 'is_active' => ((isset($params['fields'][$setting_name]['active']) && ($params['fields'][$setting_name]['active'] == 'on')) ? '1' : '0')]);
+                    unset($params['fields'][$setting_name]);
+                } else {
+                    $params['fields'][$setting_name]['name'] = '';
+                }
             }
         }
-        foreach ($params['fields'] as $setting_name => $val) {
-            if ($val['name'] != '') {
-                $update['value'] = $val['name'];
+        if (isset($params['fields'])) {
+            foreach ($params['fields'] as $setting_name => $val) {
+                if ($val['name'] != '') {
+                    $update['value'] = $val['name'];
+                }
+                $update['is_active'] = ((isset($val['active']) && ($val['active'] == 'on')) ? '1' : '0');
+                DB::table('settings')
+                        ->where('settings_name', $setting_name)
+                        ->update($update);
             }
-            $update['is_active'] = ((isset($val['active']) && ($val['active'] == 'on')) ? '1' : '0');
-            DB::table('settings')
-                    ->where('settings_name', $setting_name)
-                    ->update($update);
         }
         return true;
     }
