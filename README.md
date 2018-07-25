@@ -58,6 +58,8 @@ Documentation on : https://github.com/JeroenNoten/Laravel-AdminLTE
 
 15. Made functions common by passing parameter in URL.
 
+16. Whenever you create a new namespace, perform composer dump-autoload and  php artisan clear-compiled. 
+
 Note:
 1. To store git credentials: git config credential.helper store
 2. Added meld as difftool and mergetool on git , Download meld and run following commands
