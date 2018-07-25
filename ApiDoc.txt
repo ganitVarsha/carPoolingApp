@@ -1,0 +1,58 @@
+1. For signup
+
+ URL : 127.0.0.1:8000/api/auth/signup
+ Method : POST
+ Headers : 
+    Content-Type:application/json
+    X-Requested-With:XMLHttpRequest
+ Body : raw
+    {
+        "first_name":"api",
+        "last_name":"Test",
+        "email":"api@test.com",
+        "password":"123456",
+        "password_confirmation":"123456"
+    }
+ Response :
+    {
+        "status": true,
+        "error": [],
+        "message": "Successfully created user!"
+    }
+
+
+2. For Login
+
+ URL : 127.0.0.1:8000/api/auth/login
+ Method : POST
+ Headers : 
+    Content-Type:application/json
+    X-Requested-With:XMLHttpRequest
+ Body : raw
+    {
+        "email":"api@test.com",
+        "password":"123456",
+        "remember_me": true
+    }
+ Response :
+    {
+        "status": true,
+        "error": [],
+        "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjgwNmZiNDhlODg4MWM4MzllNzk4YWM4YTk0NTNkZWUzZDY5YjJmMjI4NjQwYjMyOWZkZWZjNGUxMTA3ZWVlZDgwOGFkMDk5ZmVhZGNlYjk2In0.eyJhdWQiOiIxIiwianRpIjoiODA2ZmI0OGU4ODgxYzgzOWU3OThhYzhhOTQ1M2RlZTNkNjliMmYyMjg2NDBiMzI5ZmRlZmM0ZTExMDdlZWVkODA4YWQwOTlmZWFkY2ViOTYiLCJpYXQiOjE1MzI1MTM4NDEsIm5iZiI6MTUzMjUxMzg0MSwiZXhwIjoxNTY0MDQ5ODQxLCJzdWIiOiI3Iiwic2NvcGVzIjpbXX0.RY0g8btxuxHb4Ox52Lqy8zTxgtaKKCkjDYgDFR5_gT-l8cRwCq8AfLNqDt2CK2Kc_WH8Kq_BHxkl-haX95wQocNni5ySjyZscE2VRTs8KLCwwdtaQpDBHtXDBf0Y_QEP3sMacK6ylF9ns6KU7ab6TjX1pXOMaHuHR9tmRcw2j3tKPfkEirEIIJdLjM4gtM6Rmvc8SUWPuZwUmX2GEQHaGvQoFshBb7RBs3I6EcYd5Q5VvRH4nxyZ9d0WbenCidajNPL3u1_9xfC1er-a6SmmFVwNsqmKFYZNJx6AvULg-R0m09_kN5KLy6XoQA_du9hjpo9xyzkYmP88eyi87IKsaz8K48E23qMSSdL0Ycw-XvJSANGkSqKH13o5gzgwzU5zNgwA2Zo1qsXS9ssDv8joRcIqewsC_LQySjN3Ndnq6u--hqOTPSPc4rRVXQWZscLJKaOLzrPb0V5Bb58jtaAiWqgZDNMNRNCl0bb0UXKvb-shRJZr9lc5kNWmfBa5IQ9LJkp3xzV67Z_FcDIhehNeEoM_tGS0Sx0cIR8E8yU4dttThVY_7DZx3y_4Hi3th39FIzIEJEw_5tdPHggF7kshWJCNHhQGqNtZL_74rfinjAvlU8jR9FgBgr7uIdLNkkSh-70X7SCO2LDYzqKRbDl5JAjA4ljdcMbc_eU8KQGRnws",
+        "token_type": "Bearer",
+        "expires_at": "2018-08-01 10:17:21"
+    }
+
+3. For Logout
+
+ URL : 127.0.0.1:8000/api/auth/logout
+ Method : GET
+ Headers : 
+    Authorization:Bearer <token>
+ 
+ Response :
+    {
+        "status": true,
+        "error": [],
+        "message": "Successfully logged out"
+    }
