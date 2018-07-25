@@ -54,6 +54,8 @@ Documentation on : https://github.com/JeroenNoten/Laravel-AdminLTE
 
 13. Created Settings update pages and redirections updated for form submition and form opening 
 
+14. Always create the asset scripts and css in public folder.
+
 Note:
 1. To store git credentials: git config credential.helper store
 2. Added meld as difftool and mergetool on git , Download meld and run following commands
