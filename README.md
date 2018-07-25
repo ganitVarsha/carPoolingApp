@@ -56,6 +56,8 @@ Documentation on : https://github.com/JeroenNoten/Laravel-AdminLTE
 
 14. Always create the asset scripts and css in public folder.
 
+15. Made functions common by passing parameter in URL.
+
 Note:
 1. To store git credentials: git config credential.helper store
 2. Added meld as difftool and mergetool on git , Download meld and run following commands

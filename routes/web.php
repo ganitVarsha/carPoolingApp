@@ -18,12 +18,8 @@ Route::get('dashboard', 'HomeController@index')->name('home');
 
 Route::get('admin', 'HomeController@admin')->middleware('admin');
 
-Route::get('settings/app', 'SettingController@app')->middleware('admin');
-Route::put('settings/app', 'SettingController@appUpdate')->middleware('admin');
-Route::get('settings/page', 'SettingController@page')->middleware('admin');
-Route::put('settings/page', 'SettingController@pageUpdate')->middleware('admin');
-Route::get('settings/web', 'SettingController@web')->middleware('admin');
-Route::put('settings/web', 'SettingController@webUpdate')->middleware('admin');
+Route::get('settings/{settings_type}', 'SettingController@show')->middleware('admin');
+Route::put('settings/{settings_type}', 'SettingController@update')->middleware('admin');
 
 Route::get('/', function () {
     return view('auth.login');

@@ -19,81 +19,17 @@ class SettingController extends Controller {
     }
     
     /**
-     * Show the application App Settings.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function app($updated = false) {
-        $list = Setting::execute('getValuesBasedOnScope', ['scope' => 'App']);
-//        $commonFunction = new Common; //error in accessing the class
-//        $list = $commonFunction->mapArray($list, 'settings_name');
-        $list = $this->mapArray($list, 'settings_name');
-        if (auth()->user()->isAdmin == 1) {
-            return view('settings.app', [
-                'list' => $list,
-                'updated' => $updated
-            ]);
-        } else {
-            return view('home');
-        }
-    }
-    
-     /**
-     * Update the application Page Settings.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function appUpdate() {
-        $update = Setting::execute('updateValues', ['fields' => $_POST]);
-        if($update){
-            return $this->app(true);
-        }
-    }
-    
-    /**
-     * Show the application Page Settings.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function page($updated = false) {
-        $list = Setting::execute('getValuesBasedOnScope', ['scope' => 'Page']);
-//        $commonFunction = new Common; //error in accessing the class
-//        $list = $commonFunction->mapArray($list, 'settings_name');
-        $list = $this->mapArray($list, 'settings_name');
-        if (auth()->user()->isAdmin == 1) {
-            return view('settings.page', [
-                'list' => $list,
-                'updated' => $updated
-            ]);
-        } else {
-            return view('home');
-        }
-    }
-    
-     /**
-     * Update the application Page Settings.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function pageUpdate() {
-        $update = Setting::execute('updateValues', ['fields' => $_POST]);
-        if($update){
-            return $this->page(true);
-        }
-    }
-    
-    /**
      * Show the application Web Settings.
      *
      * @return \Illuminate\Http\Response
      */
-    public function web($updated = false) {
-        $list = Setting::execute('getValuesBasedOnScope', ['scope' => 'Web']);
+    public function show($settings_type = 'app', $updated = false) {
+        $list = Setting::execute('getValuesBasedOnScope', ['scope' => ucfirst($settings_type)]);
 //        $commonFunction = new Common; //error in accessing the class
 //        $list = $commonFunction->mapArray($list, 'settings_name');
         $list = $this->mapArray($list, 'settings_name');
         if (auth()->user()->isAdmin == 1) {
-            return view('settings.web', [
+            return view("settings.$settings_type", [
                 'list' => $list,
                 'updated' => $updated
             ]);
@@ -107,10 +43,10 @@ class SettingController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function webUpdate() {
+    public function update($settings_type) {
         $update = Setting::execute('updateValues', ['fields' => $_POST, 'files'=> $_FILES]);
         if($update){
-            return $this->web(true);
+            return $this->show($settings_type, true);
         }
     }
     
