@@ -49,14 +49,15 @@ class SettingController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function web() {
+    public function web($updated = false) {
         $list = Setting::execute('getValuesBasedOnScope', ['scope' => 'Web']);
 //        $commonFunction = new Common; //error in accessing the class
 //        $list = $commonFunction->mapArray($list, 'settings_name');
         $list = $this->mapArray($list, 'settings_name');
         if (auth()->user()->isAdmin == 1) {
             return view('settings.web', [
-                'list' => $list
+                'list' => $list,
+                'updated' => $updated
             ]);
         } else {
             return view('home');
@@ -70,6 +71,9 @@ class SettingController extends Controller {
      */
     public function webUpdate() {
         $update = Setting::execute('updateValues', ['fields' => $_POST, 'files'=> $_FILES]);
+        if($update){
+            return $this->web(true);
+        }
     }
     
      private function mapArray($array = [], $column = '') {
