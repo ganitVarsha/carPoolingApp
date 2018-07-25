@@ -51,24 +51,28 @@ class Setting extends Model {
     private function updateValues($params) {
         unset($params['fields']['_token']);
         unset($params['fields']['_method']);
-        
+        echo "<pre>"; print_r($params);
         //error : file values are manupilated if the are empty
         if (isset($params['files'])) {
             foreach ($params['files'] as $setting_name => $val) {
                 if ($val['tmp_name']['name'] != '') {
+                    echo "<br> $setting_name : Name not null";
                     DB::table('settings')
                             ->where('settings_name', $setting_name)
                             ->update(['value' => $val['tmp_name']['name'], 'is_active' => ((isset($params['fields'][$setting_name]['active']) && ($params['fields'][$setting_name]['active'] == 'on')) ? '1' : '0')]);
                     unset($params['fields'][$setting_name]);
                 } else {
+                    echo "<br> $setting_name : Name null";
                     $params['fields'][$setting_name]['name'] = '';
                 }
             }
         }
+        print_r($params);
         if (isset($params['fields'])) {
             foreach ($params['fields'] as $setting_name => $val) {
+                    echo "<br> $setting_name : ".$val['name'];
                 if ($val['name'] != '') {
-                    $update['value'] = $val['name'];
+                    $update['value'] = trim($val['name']);
                 }
                 $update['is_active'] = ((isset($val['active']) && ($val['active'] == 'on')) ? '1' : '0');
                 DB::table('settings')
@@ -76,6 +80,7 @@ class Setting extends Model {
                         ->update($update);
             }
         }
+        die;
         return true;
     }
 
