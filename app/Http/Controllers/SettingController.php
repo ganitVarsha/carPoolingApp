@@ -17,17 +17,36 @@ class SettingController extends Controller {
     public function __construct() {
         $this->middleware('auth');
     }
-
+    
     /**
      * Show the application App Settings.
      *
      * @return \Illuminate\Http\Response
      */
-    public function app() {
+    public function app($updated = false) {
+        $list = Setting::execute('getValuesBasedOnScope', ['scope' => 'App']);
+//        $commonFunction = new Common; //error in accessing the class
+//        $list = $commonFunction->mapArray($list, 'settings_name');
+        $list = $this->mapArray($list, 'settings_name');
         if (auth()->user()->isAdmin == 1) {
-            return view('settings.app');
+            return view('settings.app', [
+                'list' => $list,
+                'updated' => $updated
+            ]);
         } else {
             return view('home');
+        }
+    }
+    
+     /**
+     * Update the application Page Settings.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function appUpdate() {
+        $update = Setting::execute('updateValues', ['fields' => $_POST]);
+        if($update){
+            return $this->app(true);
         }
     }
     
