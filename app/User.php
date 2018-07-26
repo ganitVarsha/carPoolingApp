@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -27,4 +28,32 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+    
+    /**
+     * @params string $email email of user
+     * @params string $token api_token
+     * @return booblean true
+     * @author Varsha Mittal <varsha.mittal@ganitsoftech.com>
+     * @since 26-07-2018
+     */
+    public static function saveToken($email, $token) {
+        DB::table('users')
+                            ->where('email', $email)
+                            ->update(['api_token' => $token]);
+        return true;           
+    }
+    
+    /**
+     * @params string $email email of user
+     * @params string $token api_token
+     * @return booblean true
+     * @author Varsha Mittal <varsha.mittal@ganitsoftech.com>
+     * @since 26-07-2018
+     */
+    public static function removeToken($email, $token) {
+        DB::table('users')
+                            ->where(['email'=> $email, 'api_token'=> $token])
+                            ->update(['api_token' => '']);
+        return true;           
+    }
 }
