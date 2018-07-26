@@ -37,6 +37,7 @@ class AuthController extends Controller {
         return response()->json([
                     'status' => true,
                     'error' => [],
+                    'code' => '200',
                     'message' => 'Successfully created user!'
                         ], 201);
     }
@@ -53,15 +54,16 @@ class AuthController extends Controller {
      */
     public function login(Request $request) {
         $request->validate([
-            'phone' => 'required|string',
+            'email' => 'required|string',
             'password' => 'required|string',
             'remember_me' => 'boolean'
         ]);
-        $credentials = request(['phone', 'password']);
+        $credentials = request(['email', 'password']);
         if (!Auth::attempt($credentials))
             return response()->json([
                         'status' => false,
                         'error' => [],
+                        'code' => '401',
                         'message' => 'Unauthorized'
                             ], 401);
         $user = $request->user();
@@ -70,18 +72,63 @@ class AuthController extends Controller {
         if ($request->remember_me)
             $token->expires_at = Carbon::now()->addWeeks(1);
         $token->save();
-        $request->session()->put($request->phone, $tokenResult->accessToken);
+        $otp = rand(1000, 9999);
+        $request->session()->put($request->email, $tokenResult->accessToken);
         // to use this key, use : $request->session()->get($request->email)
-        
-        User::saveToken($request->phone, $tokenResult->accessToken);
+
+        User::saveToken($request->email, $tokenResult->accessToken);
         return response()->json([
                     'status' => true,
                     'error' => [],
+                    'code' => '200',
                     'access_token' => $tokenResult->accessToken,
+                    'otp' => $otp,
                     'token_type' => 'Bearer',
                     'expires_at' => Carbon::parse(
                             $tokenResult->token->expires_at
                     )->toDateTimeString()
+        ]);
+    }
+
+    /**
+     * Login with phone number
+     * @params [string] phone number
+     * @return [array] data returns
+     * @author Varsha
+     * @since 26-07-2018
+     */
+    public function mobileLogin(Request $request) {
+//        $request->user()->token()->revoke();
+        // Get user record
+        $user = User::where('phone', $request->get('phone'))->first();
+
+        // Check Condition Mobile No. Found or Not
+        if ($request->get('phone') != $user->phone) {
+            \Session::put('errors', 'Your mobile number not match in our system..!!');
+            return response()->json([
+                        'status' => false,
+                        'error' => [
+                            'message' => 'Mobile number not found in our system.'
+                        ],
+                        'code' => '401',
+            ]);
+        }
+
+        // Set Auth Details
+        \Auth::login($user);
+        $otp = rand(1000, 9999);
+        $accessToken = $this->randomString();
+        $request->session()->put($request->phone, $accessToken);
+        $request->session()->put($request->phone . "_otp", $otp);
+
+        User::saveToken($request->phone, $accessToken);
+        return response()->json([
+                    'status' => true,
+                    'error' => [],
+                    'code' => '200',
+                    'access_token' => $accessToken,
+                    'otp' => $otp,
+                    'message' => 'OTP created'
         ]);
     }
 
@@ -91,14 +138,59 @@ class AuthController extends Controller {
      * @return [string] message
      */
     public function logout(Request $request) {
-//        $request->user()->token()->revoke();
-        User::removeToken($request->phone, $request->accessToken);
-        $request->session()->forget($request->phone);
+        $request->user()->token()->revoke();
+//        User::removeToken($request->username, $request->accessToken);
+        $request->session()->forget($request->username);
+        $request->session()->forget($request->username . "_otp");
         return response()->json([
                     'status' => true,
                     'error' => [],
+                    'code' => '200',
                     'message' => 'Successfully logged out'
         ]);
+    }
+    
+    
+    /**
+     * Logout user (Revoke the token)
+     *
+     * @return [string] message
+     */
+    public function mobileLogout(Request $request) {
+//        $request->user()->token()->revoke();
+        User::removeToken($request->username, $request->accessToken);
+        $request->session()->forget($request->username);
+        $request->session()->forget($request->username . "_otp");
+        return response()->json([
+                    'status' => true,
+                    'error' => [],
+                    'code' => '200',
+                    'message' => 'Successfully logged out'
+        ]);
+    }
+
+    /**
+     * Confirm OTP
+     *
+     * @return [boolean] OTP matched or not
+     */
+    public function matchOTP(Request $request) {
+//        $request->user()->token()->revoke();
+        if ($request->session()->get($request->phone . "_otp") == $request->otp) {
+            return response()->json([
+                        'status' => true,
+                        'error' => [],
+                        'code' => '200',
+                        'message' => 'OTP matched'
+            ]);
+        } else {
+            return response()->json([
+                        'status' => false,
+                        'error' => [],
+                        'code' => '401',
+                        'message' => 'OTP mismatched'
+            ]);
+        }
     }
 
     /**
@@ -108,6 +200,23 @@ class AuthController extends Controller {
      */
     public function user(Request $request) {
         return response()->json($request->user());
+    }
+
+    /*
+     * Create a random string
+     * @param $length the length of the string to create
+     * @return $str the string
+     */
+
+    private function randomString($length = 16) {
+        $str = "";
+        $characters = array_merge(range('A', 'Z'), range('a', 'z'), range('0', '9'));
+        $max = count($characters) - 1;
+        for ($i = 0; $i < $length; $i++) {
+            $rand = mt_rand(0, $max);
+            $str .= $characters[$rand];
+        }
+        return $str;
     }
 
 }

@@ -30,29 +30,31 @@ class User extends Authenticatable
     ];
     
     /**
-     * @params string $phone phone number of user
+     * @params string $value phone number or email of user
      * @params string $token api_token
      * @return booblean true
      * @author Varsha Mittal <varsha.mittal@ganitsoftech.com>
      * @since 26-07-2018
      */
-    public static function saveToken($phone, $token) {
+    public static function saveToken($value, $token) {
         DB::table('users')
-                            ->where('phone', $phone)
+                            ->where('email', $value)
+                            ->orWhere('phone', $value)
                             ->update(['api_token' => $token]);
         return true;           
     }
     
     /**
-     * @params string $phone phone number of user
+     * @params string $value phone number or email of user
      * @params string $token api_token
      * @return booblean true
      * @author Varsha Mittal <varsha.mittal@ganitsoftech.com>
      * @since 26-07-2018
      */
-    public static function removeToken($phone, $token) {
+    public static function removeToken($value, $token) {
         DB::table('users')
-                            ->where(['phone'=> $phone, 'api_token'=> $token])
+                            ->where(['email'=> $value, 'api_token'=> $token])
+                            ->orWhere(['phone'=> $value, 'api_token'=> $token])
                             ->update(['api_token' => '']);
         return true;           
     }

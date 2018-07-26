@@ -31,7 +31,7 @@
     X-Requested-With:XMLHttpRequest
  Body : raw
     {
-        "phone":"9876543210",
+        "email":"api@test.com",
         "password":"123456",
         "remember_me": true
     }
@@ -39,9 +39,11 @@
     {
         "status": true,
         "error": [],
-        "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjgwNmZiNDhlODg4MWM4MzllNzk4YWM4YTk0NTNkZWUzZDY5YjJmMjI4NjQwYjMyOWZkZWZjNGUxMTA3ZWVlZDgwOGFkMDk5ZmVhZGNlYjk2In0.eyJhdWQiOiIxIiwianRpIjoiODA2ZmI0OGU4ODgxYzgzOWU3OThhYzhhOTQ1M2RlZTNkNjliMmYyMjg2NDBiMzI5ZmRlZmM0ZTExMDdlZWVkODA4YWQwOTlmZWFkY2ViOTYiLCJpYXQiOjE1MzI1MTM4NDEsIm5iZiI6MTUzMjUxMzg0MSwiZXhwIjoxNTY0MDQ5ODQxLCJzdWIiOiI3Iiwic2NvcGVzIjpbXX0.RY0g8btxuxHb4Ox52Lqy8zTxgtaKKCkjDYgDFR5_gT-l8cRwCq8AfLNqDt2CK2Kc_WH8Kq_BHxkl-haX95wQocNni5ySjyZscE2VRTs8KLCwwdtaQpDBHtXDBf0Y_QEP3sMacK6ylF9ns6KU7ab6TjX1pXOMaHuHR9tmRcw2j3tKPfkEirEIIJdLjM4gtM6Rmvc8SUWPuZwUmX2GEQHaGvQoFshBb7RBs3I6EcYd5Q5VvRH4nxyZ9d0WbenCidajNPL3u1_9xfC1er-a6SmmFVwNsqmKFYZNJx6AvULg-R0m09_kN5KLy6XoQA_du9hjpo9xyzkYmP88eyi87IKsaz8K48E23qMSSdL0Ycw-XvJSANGkSqKH13o5gzgwzU5zNgwA2Zo1qsXS9ssDv8joRcIqewsC_LQySjN3Ndnq6u--hqOTPSPc4rRVXQWZscLJKaOLzrPb0V5Bb58jtaAiWqgZDNMNRNCl0bb0UXKvb-shRJZr9lc5kNWmfBa5IQ9LJkp3xzV67Z_FcDIhehNeEoM_tGS0Sx0cIR8E8yU4dttThVY_7DZx3y_4Hi3th39FIzIEJEw_5tdPHggF7kshWJCNHhQGqNtZL_74rfinjAvlU8jR9FgBgr7uIdLNkkSh-70X7SCO2LDYzqKRbDl5JAjA4ljdcMbc_eU8KQGRnws",
+        "code": "200",
+        "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImU4OWZiODVjZmM3MzRiZWVmYjUxYmNjNmY0ZDE3N2YyZGRmZTk0ZjMwYjM2NjY3NmVkODk4YTI4ZjExZWQ3MDJlNzQ4NzM1MjAyNmNiNTllIn0.eyJhdWQiOiIxIiwianRpIjoiZTg5ZmI4NWNmYzczNGJlZWZiNTFiY2M2ZjRkMTc3ZjJkZGZlOTRmMzBiMzY2Njc2ZWQ4OThhMjhmMTFlZDcwMmU3NDg3MzUyMDI2Y2I1OWUiLCJpYXQiOjE1MzI1OTMxNzksIm5iZiI6MTUzMjU5MzE3OSwiZXhwIjoxNTY0MTI5MTc5LCJzdWIiOiI5Iiwic2NvcGVzIjpbXX0.XgfVeTfk1PyUdVTJh31zTlT84e_iivmkMKjxPSu6WTJp6XVgYPewKbWpbuS4wz08mZ1T29A-us17VSQ_ot5aIU0erHNi4wN7e1-eN3VpXyHD7wbU0miT_ygZ2qxcWLkFmF9n9aPGzEFgDjg7d693q2n-z-B4-U-KpIa0rPafhKtKZlC5zh78umypIxX6go06p0FUyNbBsVkgDWXSymWSEN1GiQYyIj_xS4vlz5weqOIQnCW09jkEF0U0Lbs16kF4_v4IIiaid4kHR0q_83Dh9NxeH9-nz4URQMxT7qqiLUoQ1rO0_HFzDIbqAQlBJwUp5cGWZvsY2rhIS7Q759UXvrol63ss2YaDWRMnvZkJL3NlAQB5LJW68CoWvrlVQxeQ6lxQRT1_w54sI3TN_teMZYwu5egol_jW5ylhjoZauS34GX7MzuMAcZFp5CdOXrlgMxgBC6DHWm0u3yUIzjLgAHEsmJ6uw9qhZQdhzGm6XZ1Zy6SNzAYckopC5j0hvSMcDQKXGZnDTr1erkHwjf6vgKbV2SLXzDWWs-IABQ_jNV3AqAcgZF1ZeP5BN8U-YPrLVLRRLCnaa6zZbeaK6Imv7DkpM6tZL7hRzDwXkXzOnqSa4Zmzdbg96DJwrmhU_W2YU7yWPFdzepoUA5FUAx87EvpBKUPHKEk3TCJqPjxxWuI",
+        "otp": 6859,
         "token_type": "Bearer",
-        "expires_at": "2018-08-01 10:17:21"
+        "expires_at": "2018-08-02 08:19:39"
     }
 
 3. For Logout
@@ -53,7 +55,7 @@
     X-Requested-With:XMLHttpRequest
  Body : raw
     {
-        "phone":"9876543210",
+        "username":"9876543210",
         "accessToken": <token received when logged in>
     }
  Response :
@@ -62,3 +64,65 @@
         "error": [],
         "message": "Successfully logged out"
     }
+
+4. For mobileLogin
+
+ URL : 127.0.0.1:8000/api/auth/mobileLogin
+ Method : POST
+ Headers : 
+    Content-Type:application/json
+    X-Requested-With:XMLHttpRequest
+ Body : raw
+    {
+	"phone" : "1234567890"
+    }
+ Response :
+    {
+        "status": true,
+        "error": [],
+        "code": "200",
+        "access_token": "knmwKq797tCXCBq3",
+        "otp": 8571,
+        "message": "OTP created"
+    }
+
+5. For matchOTP
+
+ URL : 127.0.0.1:8000/api/auth/matchOTP
+ Method : POST
+ Headers : 
+    Content-Type:application/json
+    X-Requested-With:XMLHttpRequest
+ Body : raw
+    {
+	"phone" : "1234567890",
+	"otp": "8571"
+    }
+ Response :
+    {
+        "status": true,
+        "error": [],
+        "code": "200",
+        "message": "OTP matched"
+    }
+
+
+6. For mobileLogout
+
+ URL : 127.0.0.1:8000/api/auth/mobileLogout
+ Method : POST
+ Headers : 
+    Content-Type:application/json
+    X-Requested-With:XMLHttpRequest
+ Body : raw
+    {
+        "username":"9876543210",
+        "accessToken": <token received when logged in>
+    }
+ Response :
+    {
+        "status": true,
+        "error": [],
+        "message": "Successfully logged out"
+    }
+
