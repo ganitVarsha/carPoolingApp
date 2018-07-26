@@ -23,12 +23,14 @@ class AuthController extends Controller {
         $request->validate([
             'first_name' => 'required|string',
             'email' => 'required|string|email|unique:users',
+            'phone' => 'required|string|unique:users',
             'password' => 'required|string|confirmed'
         ]);
         $user = new User([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
+            'phone' => $request->phone,
             'password' => bcrypt($request->password)
         ]);
         $user->save();
@@ -51,11 +53,11 @@ class AuthController extends Controller {
      */
     public function login(Request $request) {
         $request->validate([
-            'email' => 'required|string|email',
+            'phone' => 'required|string',
             'password' => 'required|string',
             'remember_me' => 'boolean'
         ]);
-        $credentials = request(['email', 'password']);
+        $credentials = request(['phone', 'password']);
         if (!Auth::attempt($credentials))
             return response()->json([
                         'status' => false,
@@ -68,10 +70,10 @@ class AuthController extends Controller {
         if ($request->remember_me)
             $token->expires_at = Carbon::now()->addWeeks(1);
         $token->save();
-        $request->session()->put($request->email, $tokenResult->accessToken);
+        $request->session()->put($request->phone, $tokenResult->accessToken);
         // to use this key, use : $request->session()->get($request->email)
         
-        User::saveToken($request->email, $tokenResult->accessToken);
+        User::saveToken($request->phone, $tokenResult->accessToken);
         return response()->json([
                     'status' => true,
                     'error' => [],
@@ -90,8 +92,8 @@ class AuthController extends Controller {
      */
     public function logout(Request $request) {
 //        $request->user()->token()->revoke();
-        User::removeToken($request->email, $request->accessToken);
-        $request->session()->forget($request->email);
+        User::removeToken($request->phone, $request->accessToken);
+        $request->session()->forget($request->phone);
         return response()->json([
                     'status' => true,
                     'error' => [],

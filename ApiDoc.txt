@@ -10,6 +10,7 @@
         "first_name":"api",
         "last_name":"Test",
         "email":"api@test.com",
+        "phone":"9876543210",
         "password":"123456",
         "password_confirmation":"123456"
     }
@@ -30,7 +31,7 @@
     X-Requested-With:XMLHttpRequest
  Body : raw
     {
-        "email":"api@test.com",
+        "phone":"9876543210",
         "password":"123456",
         "remember_me": true
     }
@@ -46,10 +47,15 @@
 3. For Logout
 
  URL : 127.0.0.1:8000/api/auth/logout
- Method : GET
+ Method : POST
  Headers : 
-    Authorization:Bearer <token>
- 
+    Content-Type:application/json
+    X-Requested-With:XMLHttpRequest
+ Body : raw
+    {
+        "phone":"9876543210",
+        "accessToken": <token received when logged in>
+    }
  Response :
     {
         "status": true,
