@@ -16,6 +16,7 @@ class UsersTableSeeder extends Seeder {
                 'last_name' => 'Mittal',
                 'email' => 'varsha.mittal@ganitsoftech.com',
                 'password' => bcrypt('123456'),
+                'mobile' => '1234567890',
                 'created_at' => date('Y-m-d H:i:s'),
                 'isAdmin' => '1',
             ],
@@ -24,6 +25,7 @@ class UsersTableSeeder extends Seeder {
                 'last_name' => 'Name',
                 'email' => 'user2@gmail.com',
                 'password' => bcrypt('secret'),
+                'mobile' => '1324567890',
                 'created_at' => date('Y-m-d H:i:s'),
                 'isAdmin' => '0',
             ]
