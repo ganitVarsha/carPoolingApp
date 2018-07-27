@@ -9,6 +9,13 @@ use App\User;
 
 class AuthController extends Controller {
 
+    private $accessError = [
+        'status' => false,
+        'error' => ['message' => 'Acces Token mismatch!'],
+        'code' => '401',
+        'message' => 'Acces Token mismatch!'
+    ];
+
     /**
      * Create user
      *
@@ -112,12 +119,13 @@ class AuthController extends Controller {
                     'status' => true,
                     'error' => [],
                     'code' => '200',
-                    'access_token' => $tokenResult->accessToken,
-                    'otp' => $otp,
-                    'token_type' => 'Bearer',
-                    'expires_at' => Carbon::parse(
-                            $tokenResult->token->expires_at
-                    )->toDateTimeString()
+                    'data' => ['access_token' => $tokenResult->accessToken,
+                        'otp' => $otp,
+                        'token_type' => 'Bearer',
+                        'expires_at' => Carbon::parse(
+                                $tokenResult->token->expires_at
+                        )->toDateTimeString()
+                    ]
         ]);
     }
 
@@ -250,9 +258,7 @@ class AuthController extends Controller {
     }
 
     /**
-     * Create a random string
      * @param $length the length of the string to create
-     * @return $str the string
      * @author Varsha Mittal
      * @since 27-07-2018
      * @return [json] user object
@@ -275,14 +281,48 @@ class AuthController extends Controller {
                             'message' => 'Profile data not found!'
                 ]);
             }
+        } else {
+            return response()->json($this->accessError);
         }
-        else{
-            return response()->json([
-                            'status' => false,
-                            'error' => ['message' => 'Acces Token mismatch!'],
-                            'code' => '401',
-                            'message' => 'Acces Token mismatch!'
+    }
+
+    /**
+     * @param $request data received in API
+     * @author Varsha Mittal
+     * @since 27-07-2018
+     * @return [json] user object
+     */
+    public function setProfile(Request $request) {
+        if (in_array($request->accessToken, $request->session()->get('accessTokens'))) {
+            $updateData = [
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'gender' => $request->gender,
+                'dob' => $request->dob,
+                'email' => $request->email,
+                'isd' => $request->isd,
+                'phone' => $request->phone,
+                'profession' => $request->profession,
+                'nature' => $request->nature
+            ];
+            $data = User::setProfileData($request->accessToken, $updateData);
+            if ($data) {
+                return response()->json([
+                            'status' => true,
+                            'error' => [],
+                            'code' => '200',
+                            'data' => $data
                 ]);
+            } else {
+                return response()->json([
+                            'status' => false,
+                            'error' => ['message' => 'Profile data not updated! Please try again!'],
+                            'code' => '401',
+                            'message' => 'Profile data not updated! Please try again!'
+                ]);
+            }
+        } else {
+            return response()->json($this->accessError);
         }
     }
 

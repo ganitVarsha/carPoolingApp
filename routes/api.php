@@ -28,6 +28,7 @@ Route::group([
     Route::post('mobileLogin', 'AuthController@mobileLogin');
     Route::post('mobileLogout', 'AuthController@mobileLogout');
     Route::get('getProfile', 'AuthController@getProfile');
+    Route::post('setProfile', 'AuthController@setProfile');
     
     Route::group([
       'middleware' => 'auth:api'
