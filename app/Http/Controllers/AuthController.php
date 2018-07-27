@@ -66,7 +66,7 @@ class AuthController extends Controller {
         } else {
             return response()->json([
                         'status' => false,
-                        'error' => [],
+                        'error' => ['message' => 'User with this email already exists!'],
                         'code' => '401',
                         'message' => 'User with this email already exists!'
                             ], 201);
@@ -93,7 +93,7 @@ class AuthController extends Controller {
         if (!Auth::attempt($credentials))
             return response()->json([
                         'status' => false,
-                        'error' => [],
+                        'error' => ['message' => 'Unauthorized'],
                         'code' => '401',
                         'message' => 'Unauthorized'
                             ], 401);
@@ -104,8 +104,8 @@ class AuthController extends Controller {
             $token->expires_at = Carbon::now()->addWeeks(1);
         $token->save();
         $otp = rand(1000, 9999);
-        $request->session()->put($request->email, $tokenResult->accessToken);
-        // to use this key, use : $request->session()->get($request->email)
+        $request->session()->push('accessTokens.' . $request->email, $tokenResult->accessToken);
+        // to use this key, use : $request->session()->get('accessTokens'.$request->email)
 
         User::saveToken($request->email, $tokenResult->accessToken);
         return response()->json([
@@ -131,10 +131,10 @@ class AuthController extends Controller {
     public function mobileLogin(Request $request) {
 //        $request->user()->token()->revoke();
         // Get user record
-        $user = User::where('phone', $request->get('phone'))->first();
+        $user = User::where('phone', $request->phone)->first();
 
         // Check Condition Mobile No. Found or Not
-        if ($request->get('phone') != $user->phone) {
+        if (empty($user) || $request->phone != $user->phone) {
             \Session::put('errors', 'Your mobile number not match in our system..!!');
             return response()->json([
                         'status' => false,
@@ -149,7 +149,7 @@ class AuthController extends Controller {
         \Auth::login($user);
         $otp = rand(1000, 9999);
         $accessToken = $this->randomString();
-        $request->session()->put($request->phone, $accessToken);
+        $request->session()->put('accessTokens.' . $request->phone, $accessToken);
         $request->session()->put($request->phone . "_otp", $otp);
 
         User::saveToken($request->phone, $accessToken);
@@ -171,7 +171,7 @@ class AuthController extends Controller {
     public function logout(Request $request) {
         $request->user()->token()->revoke();
 //        User::removeToken($request->username, $request->accessToken);
-        $request->session()->forget($request->username);
+        $request->session()->forget('accessTokens.' . $request->username);
         $request->session()->forget($request->username . "_otp");
         return response()->json([
                     'status' => true,
@@ -189,7 +189,7 @@ class AuthController extends Controller {
     public function mobileLogout(Request $request) {
 //        $request->user()->token()->revoke();
         User::removeToken($request->username, $request->accessToken);
-        $request->session()->forget($request->username);
+        $request->session()->forget('accessTokens.' . $request->username);
         $request->session()->forget($request->username . "_otp");
         return response()->json([
                     'status' => true,
@@ -216,7 +216,7 @@ class AuthController extends Controller {
         } else {
             return response()->json([
                         'status' => false,
-                        'error' => [],
+                        'error' => ['message' => 'OTP mismatched'],
                         'code' => '401',
                         'message' => 'OTP mismatched'
             ]);
@@ -247,6 +247,43 @@ class AuthController extends Controller {
             $str .= $characters[$rand];
         }
         return $str;
+    }
+
+    /**
+     * Create a random string
+     * @param $length the length of the string to create
+     * @return $str the string
+     * @author Varsha Mittal
+     * @since 27-07-2018
+     * @return [json] user object
+     */
+    public function getProfile(Request $request) {
+        if (in_array($request->accessToken, $request->session()->get('accessTokens'))) {
+            $data = User::getProfileData($request->accessToken);
+            if (!empty($data)) {
+                return response()->json([
+                            'status' => true,
+                            'error' => [],
+                            'code' => '200',
+                            'data' => $data
+                ]);
+            } else {
+                return response()->json([
+                            'status' => false,
+                            'error' => ['message' => 'Profile data not found!'],
+                            'code' => '401',
+                            'message' => 'Profile data not found!'
+                ]);
+            }
+        }
+        else{
+            return response()->json([
+                            'status' => false,
+                            'error' => ['message' => 'Acces Token mismatch!'],
+                            'code' => '401',
+                            'message' => 'Acces Token mismatch!'
+                ]);
+        }
     }
 
 }

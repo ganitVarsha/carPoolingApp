@@ -127,7 +127,7 @@
     }
 
 
-6. For signupViaPhone
+7. For signupViaPhone
 
  URL : 127.0.0.1:8000/api/auth/signupViaPhone
  Method : POST
@@ -144,5 +144,31 @@
         "error": [],
         "code": "200",
         "message": "Successfully created user!"
+    }
+
+
+
+8. For getProfile
+
+ URL : 127.0.0.1:8000/api/auth/getProfile?accessToken=Jb2sZIvRw4HleoQV
+ Method : GET
+ Response :
+    {
+        "status": true,
+        "error": [],
+        "code": "200",
+        "data": [
+            {
+                "first_name": "api",
+                "last_name": "Test",
+                "gender": null,
+                "dob": "0000-00-00",
+                "email": "api@test.com",
+                "isd": "+91",
+                "phone": "3692580147",
+                "profession": null,
+                "nature": null
+            }
+        ]
     }
 

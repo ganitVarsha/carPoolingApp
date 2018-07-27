@@ -27,6 +27,7 @@ Route::group([
     Route::post('matchOTP', 'AuthController@matchOTP');
     Route::post('mobileLogin', 'AuthController@mobileLogin');
     Route::post('mobileLogout', 'AuthController@mobileLogout');
+    Route::get('getProfile', 'AuthController@getProfile');
     
     Route::group([
       'middleware' => 'auth:api'
