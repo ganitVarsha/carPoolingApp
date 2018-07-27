@@ -15,6 +15,7 @@ class AuthController extends Controller {
      * @param  [string] first_name
      * @param  [string] last_name
      * @param  [string] email
+     * @param  [string] phone number
      * @param  [string] password
      * @param  [string] password_confirmation
      * @return [string] message
@@ -40,6 +41,36 @@ class AuthController extends Controller {
                     'code' => '200',
                     'message' => 'Successfully created user!'
                         ], 201);
+    }
+
+    /**
+     * Create user
+     *
+     * @param  [string] phone number
+     * @return [string] message
+     */
+    public function signupViaPhone(Request $request) {
+        $request->validate([
+            'phone' => 'required|string|unique:users'
+        ]);
+        $user = new User;
+
+        $user->phone = $request->phone;
+        if ($user->save()) {
+            return response()->json([
+                        'status' => true,
+                        'error' => [],
+                        'code' => '200',
+                        'message' => 'Successfully created user!'
+                            ], 201);
+        } else {
+            return response()->json([
+                        'status' => false,
+                        'error' => [],
+                        'code' => '401',
+                        'message' => 'User with this email already exists!'
+                            ], 201);
+        }
     }
 
     /**
@@ -149,8 +180,7 @@ class AuthController extends Controller {
                     'message' => 'Successfully logged out'
         ]);
     }
-    
-    
+
     /**
      * Logout user (Revoke the token)
      *

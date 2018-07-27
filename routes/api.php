@@ -22,6 +22,7 @@ Route::group([
 ], function () {
     Route::post('login', 'AuthController@login');
     Route::post('signup', 'AuthController@signup');
+    Route::post('signupViaPhone', 'AuthController@signupViaPhone');
     Route::post('logout', 'AuthController@logout');
     Route::post('matchOTP', 'AuthController@matchOTP');
     Route::post('mobileLogin', 'AuthController@mobileLogin');

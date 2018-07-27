@@ -126,3 +126,23 @@
         "message": "Successfully logged out"
     }
 
+
+6. For signupViaPhone
+
+ URL : 127.0.0.1:8000/api/auth/signupViaPhone
+ Method : POST
+ Headers : 
+    Content-Type:application/json
+    X-Requested-With:XMLHttpRequest
+ Body : raw
+    {
+        "phone":"8974561001"
+    }
+ Response :
+    {
+        "status": true,
+        "error": [],
+        "code": "200",
+        "message": "Successfully created user!"
+    }
+
