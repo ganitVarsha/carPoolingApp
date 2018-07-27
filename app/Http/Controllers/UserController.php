@@ -36,6 +36,7 @@ class UserController extends Controller {
         $user->first_name = $request->get('first_name');
         $user->last_name = $request->get('last_name');
         $user->email = $request->get('email');
+        $user->phone = $request->get('phone');
         $user->isAdmin = $request->get('isAdmin');
         $user->password = bcrypt($request->get('password'));
         $user->created_at = date('Y-m-d H:i:s');
@@ -77,6 +78,7 @@ class UserController extends Controller {
         $user->first_name = $request->get('first_name');
         $user->last_name = $request->get('last_name');
         $user->email = $request->get('email');
+        $user->phone = $request->get('phone');
         $user->isAdmin = $request->get('isAdmin');
         $user->password = bcrypt($request->get('password'));
         $user->created_at = date('Y-m-d H:i:s');
