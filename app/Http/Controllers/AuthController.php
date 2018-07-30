@@ -17,7 +17,30 @@ class AuthController extends Controller {
     ];
 
     /**
-     * Create user
+     * Create Response
+     * @params [boolean] $status true or false
+     * @params [string] $message custome message to request
+     * @params [int] $error_code error code against request
+     * @params [array] $data data to be sent to user
+     * @return [array] response array
+     * @author Varsha
+     * @since 30-07-2018
+     */
+    private function generateResponse($status = false, $message = 'Request failed.', $error_code = 500, $data = []) {
+        $response = [
+            'status' => $status,
+            'message' => $message,
+            'error_code' => $error_code,
+        ];
+
+        if (!empty($data))
+            $response['data'] = $data;
+
+        return $response;
+    }
+
+    /**
+     * Create user via Passport authentication
      *
      * @param  [string] first_name
      * @param  [string] last_name
@@ -26,6 +49,8 @@ class AuthController extends Controller {
      * @param  [string] password
      * @param  [string] password_confirmation
      * @return [string] message
+     * @author Varsha
+     * @since 30-07-2018
      */
     public function signup(Request $request) {
         $request->validate([
@@ -51,37 +76,7 @@ class AuthController extends Controller {
     }
 
     /**
-     * Create user
-     *
-     * @param  [string] phone number
-     * @return [string] message
-     */
-    public function signupViaPhone(Request $request) {
-        $request->validate([
-            'phone' => 'required|string|unique:users'
-        ]);
-        $user = new User;
-
-        $user->phone = $request->phone;
-        if ($user->save()) {
-            return response()->json([
-                        'status' => true,
-                        'error' => [],
-                        'code' => '200',
-                        'message' => 'Successfully created user!'
-                            ], 201);
-        } else {
-            return response()->json([
-                        'status' => false,
-                        'error' => ['message' => 'User with this email already exists!'],
-                        'code' => '401',
-                        'message' => 'User with this email already exists!'
-                            ], 201);
-        }
-    }
-
-    /**
-     * Login user and create token
+     * Login user and create token using passport 
      *
      * @param  [string] email
      * @param  [string] password
@@ -89,6 +84,8 @@ class AuthController extends Controller {
      * @return [string] access_token
      * @return [string] token_type
      * @return [string] expires_at
+     * @author Varsha
+     * @since 30-07-2018
      */
     public function login(Request $request) {
         $request->validate([
@@ -130,48 +127,6 @@ class AuthController extends Controller {
     }
 
     /**
-     * Login with phone number
-     * @params [string] phone number
-     * @return [array] data returns
-     * @author Varsha
-     * @since 26-07-2018
-     */
-    public function mobileLogin(Request $request) {
-//        $request->user()->token()->revoke();
-        // Get user record
-        $user = User::where('phone', $request->phone)->first();
-
-        // Check Condition Mobile No. Found or Not
-        if (empty($user) || $request->phone != $user->phone) {
-            \Session::put('errors', 'Your mobile number not match in our system..!!');
-            return response()->json([
-                        'status' => false,
-                        'error' => [
-                            'message' => 'Mobile number not found in our system.'
-                        ],
-                        'code' => '401',
-            ]);
-        }
-
-        // Set Auth Details
-        \Auth::login($user);
-        $otp = rand(1000, 9999);
-        $accessToken = $this->randomString();
-        $request->session()->put('accessTokens.' . $request->phone, $accessToken);
-        $request->session()->put($request->phone . "_otp", $otp);
-
-        User::saveToken($request->phone, $accessToken);
-        return response()->json([
-                    'status' => true,
-                    'error' => [],
-                    'code' => '200',
-                    'access_token' => $accessToken,
-                    'otp' => $otp,
-                    'message' => 'OTP created'
-        ]);
-    }
-
-    /**
      * Logout user (Revoke the token)
      *
      * @return [string] message
@@ -189,47 +144,112 @@ class AuthController extends Controller {
         ]);
     }
 
+    //for mobile on the basis of phone number
+
     /**
-     * Logout user (Revoke the token)
-     *
-     * @return [string] message
+     * Create token with phone number
+     * 
+     * @params [string] phone number
+     * @return [array] data returns
+     * @author Varsha
+     * @since 30-07-2018
      */
-    public function mobileLogout(Request $request) {
-//        $request->user()->token()->revoke();
-        User::removeToken($request->username, $request->accessToken);
-        $request->session()->forget('accessTokens.' . $request->username);
-        $request->session()->forget($request->username . "_otp");
-        return response()->json([
-                    'status' => true,
-                    'error' => [],
-                    'code' => '200',
-                    'message' => 'Successfully logged out'
+    public function createToken(Request $request) {
+        // Get user record
+        $user = User::where('phone', $request->phone)->first();
+
+        // Check Condition Mobile No. Found or Not
+        if (empty($user) || $request->phone != $user->phone) {
+            return response()->json($this->generateResponse(false, 'Mobile number not found in our system.', 401));
+        }
+
+        $accessToken = $this->randomString();
+        $request->session()->put('accessTokens.' . $request->phone, $accessToken);
+
+        User::saveToken($request->phone, $accessToken);
+        return response()->json($this->generateResponse(true, 'Access Token created successfully!', 200, ['access_token' => $accessToken]));
+    }
+
+    /**
+     * Create user
+     *
+     * @param  [string] phone number
+     * @return [string] message
+     * @author Varsha
+     * @since 30-07-2018
+     */
+    public function signupViaPhone(Request $request) {
+        $request->validate([
+            'phone' => 'required|string|unique:users'
         ]);
+        $user = new User;
+
+        $user->phone = $request->phone;
+        $user->app_user_id = 'sp_' . $this->randomString(10);
+        if ($user->save()) {
+            return response()->json($this->generateResponse(true, 'Successfully created user!', 200));
+        } else {
+            return response()->json($this->generateResponse(false, 'User with this phone number already exists!', 401));
+        }
+    }
+
+    /**
+     * Login with phone number
+     * 
+     * @params [string] phone number
+     * @return [array] data returns
+     * @author Varsha
+     * @since 26-07-2018
+     */
+    public function mobileLogin(Request $request) {
+        // Get user record
+        $user = User::where('phone', $request->phone)->first();
+
+        // Check Condition Mobile No. Found or Not
+        if (empty($user) || $request->phone != $user->phone) {
+            return response()->json($this->generateResponse(false, 'Mobile number not found in our system.', 401));
+        }
+
+        // Set Auth Details
+        \Auth::login($user);
+        $otp = rand(1000, 9999);
+        $request->session()->put($request->phone . "_otp", $otp);
+
+        return response()->json($this->generateResponse(true, 'Logged in successfully. Please enter OTP', 200, ['otp' => $otp, 'user_id' => $user->app_user_id]));
     }
 
     /**
      * Confirm OTP
      *
+     * @param  [string] phone phone number
+     * @return [int] otp otp sent during login
      * @return [boolean] OTP matched or not
+     * @author Varsha
+     * @since 26-07-2018
      */
     public function matchOTP(Request $request) {
-//        $request->user()->token()->revoke();
         if ($request->session()->get($request->phone . "_otp") == $request->otp) {
-            return response()->json([
-                        'status' => true,
-                        'error' => [],
-                        'code' => '200',
-                        'message' => 'OTP matched'
-            ]);
+            return response()->json($this->generateResponse(true, 'OTP Matched!', 200));
         } else {
-            return response()->json([
-                        'status' => false,
-                        'error' => ['message' => 'OTP mismatched'],
-                        'code' => '401',
-                        'message' => 'OTP mismatched'
-            ]);
+            return response()->json($this->generateResponse(false, 'OTP Mismatch!', 401));
         }
     }
+
+    /**
+     * Logout user (Revoke the token)
+     *
+     * @param  [string] phone phone number
+     * @return [string] message
+     * @author Varsha
+     * @since 30-07-2018
+     */
+    public function mobileLogout(Request $request) {
+        $request->session()->forget('accessTokens.' . $request->username);
+        $request->session()->forget($request->username . "_otp");
+        return response()->json($this->generateResponse(true, 'Successfully logged out the user!', 200));
+    }
+    
+    //to be updated from here.....
 
     /**
      * Get the authenticated User
