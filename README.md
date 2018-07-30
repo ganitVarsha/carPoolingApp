@@ -62,7 +62,7 @@ Documentation on : https://github.com/JeroenNoten/Laravel-AdminLTE
 
 17. For creating API: https://medium.com/modulr/create-api-authentication-passport-in-laravel-5-6-confirm-account-notifications-part-2-5e221b021f07
     - composer require laravel/passport
-    - php artisan passport:install
+    - php artisan passport:install  ------ "this adds passport keys for authentication"
     - add HasApiTokens in User.php
     - add passport in AuthServiceProvider and config/auth.php
     - create API routes routes/api.php
@@ -81,3 +81,4 @@ Note:
     - run seeder :  composer dump-autoload
                     php artisan db:seed
                     php artisan db:seed --class=SettingsTableSeeder
+5. To make the folder work in IIS (windows server) : make sure .env file exists, posts are correct in config files and all lines are in new line of .env.

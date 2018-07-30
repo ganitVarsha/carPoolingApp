@@ -62,6 +62,20 @@ class User extends Authenticatable {
 
     /**
      * @params string $token api_token
+     * @return int user id
+     * @author Varsha Mittal <varsha.mittal@ganitsoftech.com>
+     * @since 30-07-2018
+     */
+    public static function getUserIdOnToken($token) {
+        $data = DB::table('users')
+                ->where(['api_token' => $token])
+                ->select('id')
+                ->get();
+        return $data->toArray();
+    }
+    
+    /**
+     * @params string $token api_token
      * @return array user profile data
      * @author Varsha Mittal <varsha.mittal@ganitsoftech.com>
      * @since 27-07-2018

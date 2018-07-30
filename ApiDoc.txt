@@ -1,6 +1,6 @@
 1. For signup
 
- URL : 127.0.0.1:8000/api/auth/signup
+ URL : 13.81.58.191/dev.smartpool.com/api/auth/signup
  Method : POST
  Headers : 
     Content-Type:application/json
@@ -24,7 +24,7 @@
 
 2. For Login
 
- URL : 127.0.0.1:8000/api/auth/login
+ URL : 13.81.58.191/dev.smartpool.com/api/auth/login
  Method : POST
  Headers : 
     Content-Type:application/json
@@ -50,7 +50,7 @@
 
 3. For Logout
 
- URL : 127.0.0.1:8000/api/auth/logout
+ URL : 13.81.58.191/dev.smartpool.com/api/auth/logout
  Method : POST
  Headers : 
     Content-Type:application/json
@@ -69,7 +69,7 @@
 
 4. For mobileLogin
 
- URL : 127.0.0.1:8000/api/auth/mobileLogin
+ URL : 13.81.58.191/dev.smartpool.com/api/auth/mobileLogin
  Method : POST
  Headers : 
     Content-Type:application/json
@@ -90,7 +90,7 @@
 
 5. For matchOTP
 
- URL : 127.0.0.1:8000/api/auth/matchOTP
+ URL : 13.81.58.191/dev.smartpool.com/api/auth/matchOTP
  Method : POST
  Headers : 
     Content-Type:application/json
@@ -111,7 +111,7 @@
 
 6. For mobileLogout
 
- URL : 127.0.0.1:8000/api/auth/mobileLogout
+ URL : 13.81.58.191/dev.smartpool.com/api/auth/mobileLogout
  Method : POST
  Headers : 
     Content-Type:application/json
@@ -131,7 +131,7 @@
 
 7. For signupViaPhone
 
- URL : 127.0.0.1:8000/api/auth/signupViaPhone
+ URL : 13.81.58.191/dev.smartpool.com/api/auth/signupViaPhone
  Method : POST
  Headers : 
     Content-Type:application/json
@@ -152,7 +152,7 @@
 
 8. For getProfile
 
- URL : 127.0.0.1:8000/api/auth/getProfile?accessToken=Jb2sZIvRw4HleoQV
+ URL : 13.81.58.191/dev.smartpool.com/api/auth/getProfile?accessToken=Jb2sZIvRw4HleoQV
  Method : GET
  Response :
     {
@@ -174,3 +174,31 @@
         ]
     }
 
+9. For addPool
+
+    URL : 13.81.58.191/dev.smartpool.com/api/action/addPool
+    Method : POST
+    Request : 
+    {
+	"accessToken":"io27fhrINQIQb5q3",
+	"start_location":"Ganit Softech",
+	"start_longitude":"77.0353033",
+	"start_lattitude":"28.4657163",
+	"end_location":"IGI Airport Terminal 3 Metro Station, Indira Gandhi International Airport, New Delhi, Delhi	",
+	"end_longitude":"77.0822128",
+	"end_lattitude":"28.5550838",
+	"timeframe":"30 min",
+	"preference":"all",
+	"num_of_poolers":"3",
+	"luggage_capacity":"10kg",
+	"expected_fare":"450",
+	"per_person_fare":"150",
+	"seats_full":"1"
+    }
+    Response :
+     {
+        "status": true,
+        "error": [],
+        "code": "200",
+        "message": "Pool created successfully!"
+    }

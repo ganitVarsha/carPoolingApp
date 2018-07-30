@@ -37,3 +37,9 @@ Route::group([
         Route::get('user', 'AuthController@user');
     });
 });
+
+Route::group([
+    'prefix' => 'action'
+], function () {
+    Route::post('addPool', 'ApiController@setPool');
+});
