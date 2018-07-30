@@ -1,73 +1,44 @@
 1. For signup
 
- URL : 13.81.58.191/dev.smartpool.com/api/auth/signup
+ URL : 13.81.58.191/dev.smartpool.com/api/auth/signupViaPhone
  Method : POST
  Headers : 
     Content-Type:application/json
     X-Requested-With:XMLHttpRequest
  Body : raw
     {
-        "first_name":"api",
-        "last_name":"Test",
-        "email":"api@test.com",
-        "phone":"9876543210",
-        "password":"123456",
-        "password_confirmation":"123456"
+        "phone":"9638527410"
     }
  Response :
     {
         "status": true,
-        "error": [],
-        "message": "Successfully created user!"
+        "message": "Successfully created user!",
+        "error_code": 200
     }
 
 
-2. For Login
+2. For createToken
 
- URL : 13.81.58.191/dev.smartpool.com/api/auth/login
+ URL : 13.81.58.191/dev.smartpool.com/api/auth/createToken
  Method : POST
  Headers : 
     Content-Type:application/json
     X-Requested-With:XMLHttpRequest
  Body : raw
     {
-        "email":"api@test.com",
-        "password":"123456",
-        "remember_me": true
+        "phone":"9638527410"
     }
  Response :
     {
         "status": true,
-        "error": [],
-        "code": "200",
+        "message": "Access Token created successfully!",
+        "error_code": 200,
         "data": {
-                "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImU4OWZiODVjZmM3MzRiZWVmYjUxYmNjNmY0ZDE3N2YyZGRmZTk0ZjMwYjM2NjY3NmVkODk4YTI4ZjExZWQ3MDJlNzQ4NzM1MjAyNmNiNTllIn0.eyJhdWQiOiIxIiwianRpIjoiZTg5ZmI4NWNmYzczNGJlZWZiNTFiY2M2ZjRkMTc3ZjJkZGZlOTRmMzBiMzY2Njc2ZWQ4OThhMjhmMTFlZDcwMmU3NDg3MzUyMDI2Y2I1OWUiLCJpYXQiOjE1MzI1OTMxNzksIm5iZiI6MTUzMjU5MzE3OSwiZXhwIjoxNTY0MTI5MTc5LCJzdWIiOiI5Iiwic2NvcGVzIjpbXX0.XgfVeTfk1PyUdVTJh31zTlT84e_iivmkMKjxPSu6WTJp6XVgYPewKbWpbuS4wz08mZ1T29A-us17VSQ_ot5aIU0erHNi4wN7e1-eN3VpXyHD7wbU0miT_ygZ2qxcWLkFmF9n9aPGzEFgDjg7d693q2n-z-B4-U-KpIa0rPafhKtKZlC5zh78umypIxX6go06p0FUyNbBsVkgDWXSymWSEN1GiQYyIj_xS4vlz5weqOIQnCW09jkEF0U0Lbs16kF4_v4IIiaid4kHR0q_83Dh9NxeH9-nz4URQMxT7qqiLUoQ1rO0_HFzDIbqAQlBJwUp5cGWZvsY2rhIS7Q759UXvrol63ss2YaDWRMnvZkJL3NlAQB5LJW68CoWvrlVQxeQ6lxQRT1_w54sI3TN_teMZYwu5egol_jW5ylhjoZauS34GX7MzuMAcZFp5CdOXrlgMxgBC6DHWm0u3yUIzjLgAHEsmJ6uw9qhZQdhzGm6XZ1Zy6SNzAYckopC5j0hvSMcDQKXGZnDTr1erkHwjf6vgKbV2SLXzDWWs-IABQ_jNV3AqAcgZF1ZeP5BN8U-YPrLVLRRLCnaa6zZbeaK6Imv7DkpM6tZL7hRzDwXkXzOnqSa4Zmzdbg96DJwrmhU_W2YU7yWPFdzepoUA5FUAx87EvpBKUPHKEk3TCJqPjxxWuI",
-                "otp": 6859,
-                "token_type": "Bearer",
-                "expires_at": "2018-08-02 08:19:39"
-            }
+            "access_token": "8AbFizi5ZvjSKlRa"
+        }
     }
 
-3. For Logout
-
- URL : 13.81.58.191/dev.smartpool.com/api/auth/logout
- Method : POST
- Headers : 
-    Content-Type:application/json
-    X-Requested-With:XMLHttpRequest
- Body : raw
-    {
-        "username":"9876543210",
-        "accessToken": <token received when logged in>
-    }
- Response :
-    {
-        "status": true,
-        "error": [],
-        "message": "Successfully logged out"
-    }
-
-4. For mobileLogin
+3. For mobileLogin
 
  URL : 13.81.58.191/dev.smartpool.com/api/auth/mobileLogin
  Method : POST
@@ -76,19 +47,21 @@
     X-Requested-With:XMLHttpRequest
  Body : raw
     {
-	"phone" : "1234567890"
+        "phone":"9638527410"
     }
  Response :
     {
         "status": true,
-        "error": [],
-        "code": "200",
-        "access_token": "knmwKq797tCXCBq3",
-        "otp": 8571,
-        "message": "OTP created"
+        "message": "Logged in successfully. Please enter OTP",
+        "error_code": 200,
+        "data": {
+            "otp": 8694,
+            "user_id": "sp_FnmjHZ30p7"
+        }
     }
 
-5. For matchOTP
+
+4. For matchOTP
 
  URL : 13.81.58.191/dev.smartpool.com/api/auth/matchOTP
  Method : POST
@@ -97,19 +70,17 @@
     X-Requested-With:XMLHttpRequest
  Body : raw
     {
-	"phone" : "1234567890",
-	"otp": "8571"
+        "phone":"9638527410",
+	"otp": "8694"
     }
  Response :
     {
         "status": true,
-        "error": [],
-        "code": "200",
-        "message": "OTP matched"
+        "message": "OTP Matched!",
+        "error_code": 200
     }
 
-
-6. For mobileLogout
+5. For mobileLogout
 
  URL : 13.81.58.191/dev.smartpool.com/api/auth/mobileLogout
  Method : POST
@@ -118,87 +89,12 @@
     X-Requested-With:XMLHttpRequest
  Body : raw
     {
-        "username":"9876543210",
-        "accessToken": <token received when logged in>
+        "phone":"9638527410"
     }
  Response :
     {
         "status": true,
-        "error": [],
-        "message": "Successfully logged out"
+        "message": "Successfully logged out the user!",
+        "error_code": 200
     }
 
-
-7. For signupViaPhone
-
- URL : 13.81.58.191/dev.smartpool.com/api/auth/signupViaPhone
- Method : POST
- Headers : 
-    Content-Type:application/json
-    X-Requested-With:XMLHttpRequest
- Body : raw
-    {
-        "phone":"8974561001"
-    }
- Response :
-    {
-        "status": true,
-        "error": [],
-        "code": "200",
-        "message": "Successfully created user!"
-    }
-
-
-
-8. For getProfile
-
- URL : 13.81.58.191/dev.smartpool.com/api/auth/getProfile?accessToken=Jb2sZIvRw4HleoQV
- Method : GET
- Response :
-    {
-        "status": true,
-        "error": [],
-        "code": "200",
-        "data": [
-            {
-                "first_name": "api",
-                "last_name": "Test",
-                "gender": null,
-                "dob": "0000-00-00",
-                "email": "api@test.com",
-                "isd": "+91",
-                "phone": "3692580147",
-                "profession": null,
-                "nature": null
-            }
-        ]
-    }
-
-9. For addPool
-
-    URL : 13.81.58.191/dev.smartpool.com/api/action/addPool
-    Method : POST
-    Request : 
-    {
-	"accessToken":"io27fhrINQIQb5q3",
-	"start_location":"Ganit Softech",
-	"start_longitude":"77.0353033",
-	"start_lattitude":"28.4657163",
-	"end_location":"IGI Airport Terminal 3 Metro Station, Indira Gandhi International Airport, New Delhi, Delhi	",
-	"end_longitude":"77.0822128",
-	"end_lattitude":"28.5550838",
-	"timeframe":"30 min",
-	"preference":"all",
-	"num_of_poolers":"3",
-	"luggage_capacity":"10kg",
-	"expected_fare":"450",
-	"per_person_fare":"150",
-	"seats_full":"1"
-    }
-    Response :
-     {
-        "status": true,
-        "error": [],
-        "code": "200",
-        "message": "Pool created successfully!"
-    }

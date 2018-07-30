@@ -54,8 +54,8 @@ class User extends Authenticatable {
      */
     public static function removeToken($value, $token) {
         DB::table('users')
-                ->where(['email' => $value, 'api_token' => $token])
-                ->orWhere(['phone' => $value, 'api_token' => $token])
+                ->where(['email' => $value])
+                ->orWhere(['phone' => $value])
                 ->update(['api_token' => '']);
         return true;
     }
