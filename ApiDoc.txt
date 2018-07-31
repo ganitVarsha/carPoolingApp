@@ -150,20 +150,18 @@
         "status": true,
         "message": "User Exists!",
         "error_code": 200,
-        "data": [
-            {
-                "id": 1,
-                "first_name": "Varsha",
-                "last_name": "Mittal",
-                "gender": null,
-                "dob": "0000-00-00",
-                "email": "varsha.mittal@ganitsoftech.com",
-                "isd": "+91",
-                "phone": "8974561000",
-                "profession": null,
-                "nature": null
-            }
-        ]
+        "data": {
+                    "id": 1,
+                    "first_name": "Varsha",
+                    "last_name": "Mittal",
+                    "gender": null,
+                    "dob": "0000-00-00",
+                    "email": "varsha.mittal@ganitsoftech.com",
+                    "isd": "+91",
+                    "phone": "8974561000",
+                    "profession": null,
+                    "nature": null
+                }
     }
 
 9. For setProfile
