@@ -1,8 +1,15 @@
 <?php
+
 namespace App\Transformers;
 
-class Json
-{
+class Json {
+
+    public static $accessError = [
+        'status' => false,
+        'message' => 'Acces Token mismatch!',
+        'error_code' => '401'
+    ];
+
     /**
      * Create Response
      * @params [boolean] $status true or false
@@ -13,7 +20,7 @@ class Json
      * @author Varsha
      * @since 31-07-2018
      */
-     public static function response($status = false, $message = 'Request failed.', $error_code = 200, $data = []) {
+    public static function response($status = false, $message = 'Request failed.', $error_code = 200, $data = []) {
         $response = [
             'status' => $status,
             'message' => $message,
@@ -25,4 +32,5 @@ class Json
 
         return $response;
     }
+
 }

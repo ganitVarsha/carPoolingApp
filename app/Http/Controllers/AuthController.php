@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\User;
 use App\Transformers\Json;
+use App\Classes\Common;
 
 class AuthController extends Controller {
 
@@ -17,22 +18,7 @@ class AuthController extends Controller {
         'message' => 'Acces Token mismatch!'
     ];
 
-    /*
-     * Create a random string
-     * @param $length the length of the string to create
-     * @return $str the string
-     */
-
-    private function randomString($length = 16) {
-        $str = "";
-        $characters = array_merge(range('A', 'Z'), range('a', 'z'), range('0', '9'));
-        $max = count($characters) - 1;
-        for ($i = 0; $i < $length; $i++) {
-            $rand = mt_rand(0, $max);
-            $str .= $characters[$rand];
-        }
-        return $str;
-    }
+   
 
     /**
      * Create user via Passport authentication
@@ -158,7 +144,7 @@ class AuthController extends Controller {
             return response()->json(Json::response(false, 'Mobile number not found in our system.', 401));
         }
 
-        $accessToken = $this->randomString();
+        $accessToken = Common::randomString();
         $request->session()->put('accessTokens.' . $request->phone, $accessToken);
 
         User::saveToken($request->phone, $accessToken);
@@ -180,7 +166,7 @@ class AuthController extends Controller {
         $user = new User;
 
         $user->phone = $request->phone;
-        $user->app_user_id = 'sp_' . $this->randomString(10);
+        $user->app_user_id = 'sp_' . Common::randomString(5) . Common::randomString(5);
         if ($user->save()) {
             return response()->json(Json::response(true, 'Successfully created user!', 200));
         } else {

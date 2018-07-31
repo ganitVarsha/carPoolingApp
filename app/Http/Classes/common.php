@@ -26,5 +26,23 @@ class Common {
             echo $ex->getMessage();
         }
     }
+    
+     /**
+     * Create a random string
+     * @param $length the length of the string to create
+     * @return $str the string
+     * @author Varsha Mittal <varsha.mittal@ganitsoftech.com>
+     */
+
+    public static function randomString($length = 16) {
+        $str = "";
+        $characters = array_merge(range('A', 'Z'), range('a', 'z'), range('0', '9'));
+        $max = count($characters) - 1;
+        for ($i = 0; $i < $length; $i++) {
+            $rand = mt_rand(0, $max);
+            $str .= $characters[$rand];
+        }
+        return $str;
+    }
 
 }
