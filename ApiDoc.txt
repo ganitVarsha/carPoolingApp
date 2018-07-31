@@ -98,3 +98,56 @@
         "error_code": 200
     }
 
+
+7. For getProfile
+
+ URL : 13.81.58.191/dev.smartpool.com/api/auth/getProfile?app_user_id=sp_hbashdsjadsadsajd
+ Method : GET
+ Response :
+    {
+        "status": true,
+        "message": "User Exists!",
+        "error_code": 200,
+        "data": [
+            {
+                "id": 1,
+                "first_name": "Varsha",
+                "last_name": "Mittal",
+                "gender": null,
+                "dob": "0000-00-00",
+                "email": "varsha.mittal@ganitsoftech.com",
+                "isd": "+91",
+                "phone": "8974561000",
+                "profession": null,
+                "nature": null
+            }
+        ]
+    }
+
+8. For setProfile
+
+ URL : 13.81.58.191/dev.smartpool.com/api/auth/setProfile
+ Method : POST
+ Headers : 
+    Content-Type:application/json
+    X-Requested-With:XMLHttpRequest
+ Body : raw
+    {
+	"app_user_id":"sp_bjsd876sadsadj",
+	"first_name": "api",
+        "last_name": "Test",
+        "gender": "Female",
+        "dob": "1993-10-20",
+        "email": "api@test.con",
+        "isd": "+91",
+        "phone": "3692580147",
+        "profession": "Business",
+        "nature": "intro"
+    }
+ Response :
+    {
+        "status": true,
+        "message": "Profile updated successfully!",
+        "error_code": 200
+    }
+
