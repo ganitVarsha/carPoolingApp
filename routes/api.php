@@ -45,4 +45,5 @@ Route::group([
     'prefix' => 'action'
         ], function () {
     Route::post('addPool', 'ApiController@setPool');
+    Route::post('getAvailablePool', 'ApiController@getPool');
 });

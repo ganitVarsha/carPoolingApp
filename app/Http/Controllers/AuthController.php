@@ -18,8 +18,6 @@ class AuthController extends Controller {
         'message' => 'Acces Token mismatch!'
     ];
 
-   
-
     /**
      * Create user via Passport authentication
      *
@@ -48,12 +46,7 @@ class AuthController extends Controller {
             'password' => bcrypt($request->password)
         ]);
         $user->save();
-        return response()->json([
-                    'status' => true,
-                    'error' => [],
-                    'code' => '200',
-                    'message' => 'Successfully created user!'
-                        ], 201);
+        return response()->json(Json::response(true, 'User created successfully.', 200));
     }
 
     /**
@@ -76,12 +69,7 @@ class AuthController extends Controller {
         ]);
         $credentials = request(['email', 'password']);
         if (!Auth::attempt($credentials))
-            return response()->json([
-                        'status' => false,
-                        'error' => ['message' => 'Unauthorized'],
-                        'code' => '401',
-                        'message' => 'Unauthorized'
-                            ], 401);
+            return response()->json(Json::response(false, 'Unauthorized user.', 401));
         $user = $request->user();
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
@@ -93,18 +81,13 @@ class AuthController extends Controller {
         // to use this key, use : $request->session()->get('accessTokens'.$request->email)
 
         User::saveToken($request->email, $tokenResult->accessToken);
-        return response()->json([
-                    'status' => true,
-                    'error' => [],
-                    'code' => '200',
-                    'data' => ['access_token' => $tokenResult->accessToken,
-                        'otp' => $otp,
-                        'token_type' => 'Bearer',
-                        'expires_at' => Carbon::parse(
-                                $tokenResult->token->expires_at
-                        )->toDateTimeString()
-                    ]
-        ]);
+        return response()->json(Json::response(true, 'Login success.', 401, ['access_token' => $tokenResult->accessToken,
+                            'otp' => $otp,
+                            'token_type' => 'Bearer',
+                            'expires_at' => Carbon::parse(
+                                    $tokenResult->token->expires_at
+                            )->toDateTimeString()
+        ]));
     }
 
     /**
@@ -117,12 +100,7 @@ class AuthController extends Controller {
 //        User::removeToken($request->username, $request->accessToken);
         $request->session()->forget('accessTokens.' . $request->username);
         $request->session()->forget($request->username . "_otp");
-        return response()->json([
-                    'status' => true,
-                    'error' => [],
-                    'code' => '200',
-                    'message' => 'Successfully logged out'
-        ]);
+        return response()->json(Json::response(true, 'Successfully logged out.', 200));
     }
 
     //for mobile on the basis of phone number

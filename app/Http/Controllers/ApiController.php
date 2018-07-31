@@ -53,31 +53,21 @@ class ApiController extends Controller {
     }
 
     /**
-     * @param array $request data received in API
+     * @param array $request data received in API logitude, latitude, preference
      * @author Varsha Mittal
-     * @since 27-07-2018
+     * @since 31-07-2018
      * @return [json] user object
      */
     public function getPool(Request $request) {
         if (in_array($request->accessToken, $request->session()->get('accessTokens'))) {
-            $data = User::getProfileData($request->accessToken);
+            $data = Pool::getAvailablePool($request->longitude, $request->latitude, $request->preference);
             if (!empty($data)) {
-                return response()->json([
-                            'status' => true,
-                            'error' => [],
-                            'code' => '200',
-                            'data' => $data
-                ]);
+                return response()->json(Json::response(true, 'Pool data received!', 200, $data));
             } else {
-                return response()->json([
-                            'status' => false,
-                            'error' => ['message' => 'Profile data not found!'],
-                            'code' => '401',
-                            'message' => 'Profile data not found!'
-                ]);
+                return response()->json(Json::response(false, 'No Pool available!', 401));
             }
         } else {
-            return response()->json($this->accessError);
+            return response()->json(Json::$accessError);
         }
     }
 

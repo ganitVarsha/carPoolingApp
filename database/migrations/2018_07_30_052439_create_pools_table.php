@@ -16,19 +16,19 @@ class CreatePoolsTable extends Migration
         Schema::create('pools', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
-            $table->string('start_location', 20)->nullable();
+            $table->string('start_location', 100)->nullable();
             $table->string('start_longitude', 20)->nullable();
-            $table->string('start_lattitude', 20)->nullable();
-            $table->string('end_location', 20)->nullable();
+            $table->string('start_latitude', 20)->nullable();
+            $table->string('end_location', 100)->nullable();
             $table->string('end_longitude', 20)->nullable();
-            $table->string('end_lattitude', 20)->nullable();
+            $table->string('end_latitude', 20)->nullable();
             $table->string('timeframe', 10)->nullable();
             $table->string('preference', 20)->nullable();
             $table->string('num_of_poolers', 3)->nullable();
             $table->string('luggage_capacity', 4)->nullable();
             $table->string('expected_fare', 5)->nullable();
             $table->string('per_person_fare', 5)->nullable();
-            $table->string('seats_full', 3)->nullable()->default(1);
+            $table->string('seats_full', 3)->nullable()->default(0);
             $table->timestamps();
         });
     }
