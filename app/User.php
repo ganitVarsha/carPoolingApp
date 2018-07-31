@@ -73,36 +73,36 @@ class User extends Authenticatable {
                 ->get();
         return $data->toArray();
     }
-    
+
     /**
-     * @params string $token api_token
+     * @params string $app_user_id app_user_id
      * @return array user profile data
      * @author Varsha Mittal <varsha.mittal@ganitsoftech.com>
      * @since 27-07-2018
      */
-    public static function getProfileData($token) {
+    public static function getProfileData($app_user_id) {
         $data = DB::table('users')
-                ->where(['api_token' => $token])
+                ->where(['app_user_id' => $app_user_id])
                 ->select('id', 'first_name', 'last_name', 'gender', 'dob', 'email', 'isd', 'phone', 'profession', 'nature')
                 ->get();
         return $data;
     }
 
     /**
-     * @params string $token api_token
+     * @params string $app_user_id app_user_id
      * @params array $updateData data to be updated
      * @return boolean true
      * @author Varsha Mittal <varsha.mittal@ganitsoftech.com>
      * @since 27-07-2018
      */
-    public static function setProfileData($token = '', $updateData = '') {
-        if ($token == '' || $updateData == '') {
-            $data = DB::table('users')
-                    ->where(['api_token' => $token])
-                    ->update($updateData);
-            return true;
-        } else {
+    public static function setProfileData($app_user_id = '', $updateData = []) {
+        if ($app_user_id == '' || empty($updateData)) {
             return false;
+        } else {
+            $data = DB::table('users')
+                            ->where(['app_user_id' => $app_user_id])
+                            ->update($updateData);
+            return true;
         }
     }
 

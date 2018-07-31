@@ -39,6 +39,23 @@ class AuthController extends Controller {
         return $response;
     }
 
+    /*
+     * Create a random string
+     * @param $length the length of the string to create
+     * @return $str the string
+     */
+
+    private function randomString($length = 16) {
+        $str = "";
+        $characters = array_merge(range('A', 'Z'), range('a', 'z'), range('0', '9'));
+        $max = count($characters) - 1;
+        for ($i = 0; $i < $length; $i++) {
+            $rand = mt_rand(0, $max);
+            $str .= $characters[$rand];
+        }
+        return $str;
+    }
+
     /**
      * Create user via Passport authentication
      *
@@ -248,34 +265,8 @@ class AuthController extends Controller {
         $request->session()->forget($request->username . "_otp");
         return response()->json($this->generateResponse(true, 'Successfully logged out the user!', 200));
     }
-    
+
     //to be updated from here.....
-
-    /**
-     * Get the authenticated User
-     *
-     * @return [json] user object
-     */
-    public function user(Request $request) {
-        return response()->json($request->user());
-    }
-
-    /*
-     * Create a random string
-     * @param $length the length of the string to create
-     * @return $str the string
-     */
-
-    private function randomString($length = 16) {
-        $str = "";
-        $characters = array_merge(range('A', 'Z'), range('a', 'z'), range('0', '9'));
-        $max = count($characters) - 1;
-        for ($i = 0; $i < $length; $i++) {
-            $rand = mt_rand(0, $max);
-            $str .= $characters[$rand];
-        }
-        return $str;
-    }
 
     /**
      * @param $length the length of the string to create
@@ -284,25 +275,11 @@ class AuthController extends Controller {
      * @return [json] user object
      */
     public function getProfile(Request $request) {
-        if (in_array($request->accessToken, $request->session()->get('accessTokens'))) {
-            $data = User::getProfileData($request->accessToken);
-            if (!empty($data)) {
-                return response()->json([
-                            'status' => true,
-                            'error' => [],
-                            'code' => '200',
-                            'data' => $data
-                ]);
-            } else {
-                return response()->json([
-                            'status' => false,
-                            'error' => ['message' => 'Profile data not found!'],
-                            'code' => '401',
-                            'message' => 'Profile data not found!'
-                ]);
-            }
+        $data = User::getProfileData($request->app_user_id);
+        if (!empty($data)) {
+            return response()->json($this->generateResponse(true, 'User Exists!', 200, $data));
         } else {
-            return response()->json($this->accessError);
+            return response()->json($this->generateResponse(false, 'User not found!', 401));
         }
     }
 
@@ -313,36 +290,22 @@ class AuthController extends Controller {
      * @return [json] user object
      */
     public function setProfile(Request $request) {
-        if (in_array($request->accessToken, $request->session()->get('accessTokens'))) {
-            $updateData = [
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'gender' => $request->gender,
-                'dob' => $request->dob,
-                'email' => $request->email,
-                'isd' => $request->isd,
-                'phone' => $request->phone,
-                'profession' => $request->profession,
-                'nature' => $request->nature
-            ];
-            $data = User::setProfileData($request->accessToken, $updateData);
-            if ($data) {
-                return response()->json([
-                            'status' => true,
-                            'error' => [],
-                            'code' => '200',
-                            'data' => $data
-                ]);
-            } else {
-                return response()->json([
-                            'status' => false,
-                            'error' => ['message' => 'Profile data not updated! Please try again!'],
-                            'code' => '401',
-                            'message' => 'Profile data not updated! Please try again!'
-                ]);
-            }
+        $updateData = [
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'gender' => $request->gender,
+            'dob' => $request->dob,
+            'email' => $request->email,
+            'isd' => $request->isd,
+            'phone' => $request->phone,
+            'profession' => $request->profession,
+            'nature' => $request->nature
+        ];
+        $data = User::setProfileData($request->app_user_id, $updateData);
+        if ($data) {
+            return response()->json($this->generateResponse(true, 'Profile updated successfully!', 200));
         } else {
-            return response()->json($this->accessError);
+            return response()->json($this->generateResponse(false, 'Profile data not updated! Please try again with valid data!', 401));
         }
     }
 
