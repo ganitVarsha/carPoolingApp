@@ -84,7 +84,7 @@ class User extends Authenticatable {
         $data = DB::table('users')
                 ->where(['app_user_id' => $app_user_id])
                 ->select('id', 'first_name', 'last_name', 'gender', 'dob', 'email', 'isd', 'phone', 'profession', 'nature')
-                ->get();
+                ->get()->first();
         return $data;
     }
 
