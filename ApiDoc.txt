@@ -98,8 +98,50 @@
         "error_code": 200
     }
 
+6. To generate token for password reset : generate token
 
-7. For getProfile
+ URL : 13.81.58.191/dev.smartpool.com/api/auth/password/email
+ Method : POST
+ Headers : 
+    Accept:application/json
+    Content-Type:application/json
+ Body : raw
+    {
+        "email": "api@test.con"
+    }
+ Response :
+    {
+        "status": true,
+        "message": "Token generated!",
+        "error_code": 200,
+        "data": {
+            "token": "93bb4fde1b8c4b26224dda365af43f11f6d6951d8f4b39f55704875420d8c20c"
+        }
+    }
+
+7. To reset password
+
+ URL : 13.81.58.191/dev.smartpool.com/api/auth/password/email
+ Method : POST
+ Headers : 
+    Accept:application/json
+    Content-Type:application/json
+ Body : raw
+    {
+        "email": "api@test.con",
+        "password" : "123456",
+        "password_confirmation" : "123456",
+        "token" : "d949a4bd910f3fc3fd20c2a3faa49873e2f3f1302d8506c64125b7e3d8690a86"
+    }
+ Response :
+    {
+        "status": true,
+        "message": "Password reset succesfully!",
+        "error_code": 200,
+        "data": "Your password has been reset!"
+    }
+ 
+8. For getProfile
 
  URL : 13.81.58.191/dev.smartpool.com/api/auth/getProfile?app_user_id=sp_hbashdsjadsadsajd
  Method : GET
@@ -124,7 +166,7 @@
         ]
     }
 
-8. For setProfile
+9. For setProfile
 
  URL : 13.81.58.191/dev.smartpool.com/api/auth/setProfile
  Method : POST

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\User;
 use App\Pool;
+use App\Transformers\Json;
 
 class ApiController extends Controller {
 

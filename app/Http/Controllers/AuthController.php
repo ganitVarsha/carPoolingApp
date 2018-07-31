@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\User;
+use App\Transformers\Json;
 
 class AuthController extends Controller {
 
@@ -15,29 +16,6 @@ class AuthController extends Controller {
         'code' => '401',
         'message' => 'Acces Token mismatch!'
     ];
-
-    /**
-     * Create Response
-     * @params [boolean] $status true or false
-     * @params [string] $message custome message to request
-     * @params [int] $error_code error code against request
-     * @params [array] $data data to be sent to user
-     * @return [array] response array
-     * @author Varsha
-     * @since 30-07-2018
-     */
-    private function generateResponse($status = false, $message = 'Request failed.', $error_code = 500, $data = []) {
-        $response = [
-            'status' => $status,
-            'message' => $message,
-            'error_code' => $error_code,
-        ];
-
-        if (!empty($data))
-            $response['data'] = $data;
-
-        return $response;
-    }
 
     /*
      * Create a random string
@@ -177,14 +155,14 @@ class AuthController extends Controller {
 
         // Check Condition Mobile No. Found or Not
         if (empty($user) || $request->phone != $user->phone) {
-            return response()->json($this->generateResponse(false, 'Mobile number not found in our system.', 401));
+            return response()->json(Json::response(false, 'Mobile number not found in our system.', 401));
         }
 
         $accessToken = $this->randomString();
         $request->session()->put('accessTokens.' . $request->phone, $accessToken);
 
         User::saveToken($request->phone, $accessToken);
-        return response()->json($this->generateResponse(true, 'Access Token created successfully!', 200, ['access_token' => $accessToken]));
+        return response()->json(Json::response(true, 'Access Token created successfully!', 200, ['access_token' => $accessToken]));
     }
 
     /**
@@ -204,9 +182,9 @@ class AuthController extends Controller {
         $user->phone = $request->phone;
         $user->app_user_id = 'sp_' . $this->randomString(10);
         if ($user->save()) {
-            return response()->json($this->generateResponse(true, 'Successfully created user!', 200));
+            return response()->json(Json::response(true, 'Successfully created user!', 200));
         } else {
-            return response()->json($this->generateResponse(false, 'User with this phone number already exists!', 401));
+            return response()->json(Json::response(false, 'User with this phone number already exists!', 401));
         }
     }
 
@@ -224,7 +202,7 @@ class AuthController extends Controller {
 
         // Check Condition Mobile No. Found or Not
         if (empty($user) || $request->phone != $user->phone) {
-            return response()->json($this->generateResponse(false, 'Mobile number not found in our system.', 401));
+            return response()->json(Json::response(false, 'Mobile number not found in our system.', 401));
         }
 
         // Set Auth Details
@@ -232,7 +210,7 @@ class AuthController extends Controller {
         $otp = rand(1000, 9999);
         $request->session()->put($request->phone . "_otp", $otp);
 
-        return response()->json($this->generateResponse(true, 'Logged in successfully. Please enter OTP', 200, ['otp' => $otp, 'user_id' => $user->app_user_id]));
+        return response()->json(Json::response(true, 'Logged in successfully. Please enter OTP', 200, ['otp' => $otp, 'user_id' => $user->app_user_id]));
     }
 
     /**
@@ -246,9 +224,9 @@ class AuthController extends Controller {
      */
     public function matchOTP(Request $request) {
         if ($request->session()->get($request->phone . "_otp") == $request->otp) {
-            return response()->json($this->generateResponse(true, 'OTP Matched!', 200));
+            return response()->json(Json::response(true, 'OTP Matched!', 200));
         } else {
-            return response()->json($this->generateResponse(false, 'OTP Mismatch!', 401));
+            return response()->json(Json::response(false, 'OTP Mismatch!', 401));
         }
     }
 
@@ -263,7 +241,7 @@ class AuthController extends Controller {
     public function mobileLogout(Request $request) {
         $request->session()->forget('accessTokens.' . $request->username);
         $request->session()->forget($request->username . "_otp");
-        return response()->json($this->generateResponse(true, 'Successfully logged out the user!', 200));
+        return response()->json(Json::response(true, 'Successfully logged out the user!', 200));
     }
 
     //to be updated from here.....
@@ -277,9 +255,9 @@ class AuthController extends Controller {
     public function getProfile(Request $request) {
         $data = User::getProfileData($request->app_user_id);
         if (!empty($data)) {
-            return response()->json($this->generateResponse(true, 'User Exists!', 200, $data));
+            return response()->json(Json::response(true, 'User Exists!', 200, $data));
         } else {
-            return response()->json($this->generateResponse(false, 'User not found!', 401));
+            return response()->json(Json::response(false, 'User not found!', 401));
         }
     }
 
@@ -303,9 +281,9 @@ class AuthController extends Controller {
         ];
         $data = User::setProfileData($request->app_user_id, $updateData);
         if ($data) {
-            return response()->json($this->generateResponse(true, 'Profile updated successfully!', 200));
+            return response()->json(Json::response(true, 'Profile updated successfully!', 200));
         } else {
-            return response()->json($this->generateResponse(false, 'Profile data not updated! Please try again with valid data!', 401));
+            return response()->json(Json::response(false, 'Profile data not updated! Please try again with valid data!', 401));
         }
     }
 
