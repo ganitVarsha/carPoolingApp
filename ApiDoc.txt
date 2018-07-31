@@ -191,3 +191,33 @@
         "error_code": 200
     }
 
+10. CreatePool
+
+ URL : 13.81.58.191/dev.smartpool.com/api/action/addPool
+ Method : POST
+ Headers : 
+    Content-Type:application/x-www-form-urlencoded
+    Accept:application/json
+ Body : 
+    x-www-form-urlencoded
+    accessToken:jBAlNasEkPneBete
+    start_location:Ganit Softech
+    start_longitude:77.0353033
+    start_lattitude:28.4657163
+    end_location:IGI Airport Terminal 3 Metro Station Indira Gandhi International Airport New Delhi Delhi
+    end_longitude:77.0822128
+    end_lattitude:28.5550838
+    timeframe:30 min
+    preference:all
+    num_of_poolers:3
+    luggage_capacity:10kg
+    expected_fare:450
+    per_person_fare:150
+    seats_full:1
+ Response :
+    {
+        "status": true,
+        "message": "Pool created successfully!",
+        "error_code": 200
+    }
+

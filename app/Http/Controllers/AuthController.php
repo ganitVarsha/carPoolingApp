@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\User;
 use App\Transformers\Json;
+use App\Classes\Common;
 
 class AuthController extends Controller {
 
@@ -62,12 +63,7 @@ class AuthController extends Controller {
             'password' => bcrypt($request->password)
         ]);
         $user->save();
-        return response()->json([
-                    'status' => true,
-                    'error' => [],
-                    'code' => '200',
-                    'message' => 'Successfully created user!'
-                        ], 201);
+        return response()->json(Json::response(true, 'User created successfully.', 200));
     }
 
     /**
@@ -90,12 +86,7 @@ class AuthController extends Controller {
         ]);
         $credentials = request(['email', 'password']);
         if (!Auth::attempt($credentials))
-            return response()->json([
-                        'status' => false,
-                        'error' => ['message' => 'Unauthorized'],
-                        'code' => '401',
-                        'message' => 'Unauthorized'
-                            ], 401);
+            return response()->json(Json::response(false, 'Unauthorized user.', 401));
         $user = $request->user();
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
@@ -107,18 +98,13 @@ class AuthController extends Controller {
         // to use this key, use : $request->session()->get('accessTokens'.$request->email)
 
         User::saveToken($request->email, $tokenResult->accessToken);
-        return response()->json([
-                    'status' => true,
-                    'error' => [],
-                    'code' => '200',
-                    'data' => ['access_token' => $tokenResult->accessToken,
-                        'otp' => $otp,
-                        'token_type' => 'Bearer',
-                        'expires_at' => Carbon::parse(
-                                $tokenResult->token->expires_at
-                        )->toDateTimeString()
-                    ]
-        ]);
+        return response()->json(Json::response(true, 'Login success.', 401, ['access_token' => $tokenResult->accessToken,
+                            'otp' => $otp,
+                            'token_type' => 'Bearer',
+                            'expires_at' => Carbon::parse(
+                                    $tokenResult->token->expires_at
+                            )->toDateTimeString()
+        ]));
     }
 
     /**
@@ -131,12 +117,7 @@ class AuthController extends Controller {
 //        User::removeToken($request->username, $request->accessToken);
         $request->session()->forget('accessTokens.' . $request->username);
         $request->session()->forget($request->username . "_otp");
-        return response()->json([
-                    'status' => true,
-                    'error' => [],
-                    'code' => '200',
-                    'message' => 'Successfully logged out'
-        ]);
+        return response()->json(Json::response(true, 'Successfully logged out.', 200));
     }
 
     //for mobile on the basis of phone number
@@ -158,7 +139,7 @@ class AuthController extends Controller {
             return response()->json(Json::response(false, 'Mobile number not found in our system.', 401));
         }
 
-        $accessToken = $this->randomString();
+        $accessToken = Common::randomString();
         $request->session()->put('accessTokens.' . $request->phone, $accessToken);
 
         User::saveToken($request->phone, $accessToken);
@@ -180,7 +161,7 @@ class AuthController extends Controller {
         $user = new User;
 
         $user->phone = $request->phone;
-        $user->app_user_id = 'sp_' . $this->randomString(10);
+        $user->app_user_id = 'sp_' . Common::randomString(5) . Common::randomString(5);
         if ($user->save()) {
             return response()->json(Json::response(true, 'Successfully created user!', 200));
         } else {

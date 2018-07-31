@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Support\Facades\DB;
+use \Illuminate\Database\QueryException;
 
 class User extends Authenticatable {
 
@@ -82,9 +83,9 @@ class User extends Authenticatable {
      */
     public static function getProfileData($app_user_id) {
         $data = DB::table('users')
-                ->where(['app_user_id' => $app_user_id])
-                ->select('id', 'first_name', 'last_name', 'gender', 'dob', 'email', 'isd', 'phone', 'profession', 'nature')
-                ->get()->first();
+                        ->where(['app_user_id' => $app_user_id])
+                        ->select('id', 'first_name', 'last_name', 'gender', 'dob', 'email', 'isd', 'phone', 'profession', 'nature')
+                        ->get()->first();
         return $data;
     }
 
@@ -99,9 +100,14 @@ class User extends Authenticatable {
         if ($app_user_id == '' || empty($updateData)) {
             return false;
         } else {
-            $data = DB::table('users')
-                            ->where(['app_user_id' => $app_user_id])
-                            ->update($updateData);
+            try {
+                $data = DB::table('users')
+                        ->where(['app_user_id' => $app_user_id])
+                        ->update($updateData);
+            } catch (QueryException $e) {
+                return false;
+                error_log("SetProfileData for $app_user_id :". $e->getMessage());
+            }
             return true;
         }
     }
