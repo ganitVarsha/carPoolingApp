@@ -37,6 +37,7 @@ class Pool extends Model {
                                 . "FROM pools "
                                 . "LEFT JOIN users on users.id = pools.user_id "
                                 . "WHERE num_of_poolers <> seats_full "
+                                . "and pool_end_time > CURRENT_TIME() "
                                 . "$preference_condition "
                                 . "HAVING (start_distance < ( radius" . " + " . ($attempt * 500) . ")" . " and end_distance < (radius " . " + " . ($attempt * 0.500) . ")) "
                                 . "ORDER BY start_distance "
@@ -54,6 +55,19 @@ class Pool extends Model {
         } else {
             return false;
         }
+    }
+
+    /**
+     * @param int $pool_id pool id
+     * @return boolean true or false
+     * @author Varsha Mittal <varsha.mittal@ganitsoftech.com>
+     * @since 01-08-2018
+     */
+    public static function updateSeat($pool_id) {
+        DB::table('pools')
+                ->whereId($pool_id)
+                ->increment('seats_full');
+        return true;
     }
 
 }

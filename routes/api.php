@@ -46,4 +46,5 @@ Route::group([
         ], function () {
     Route::post('addPool', 'ApiController@setPool');
     Route::post('getAvailablePool', 'ApiController@getPool');
+    Route::post('connectToPool', 'ApiController@connectToPool');
 });

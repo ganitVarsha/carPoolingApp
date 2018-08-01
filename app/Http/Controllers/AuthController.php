@@ -245,6 +245,7 @@ class AuthController extends Controller {
     public function mobileLogout(Request $request) {
         $request->session()->forget('accessTokens.' . $request->username);
         Cache::forget($request->username . "_otp");
+        User::saveToken($request->username, '');
         return response()->json(Json::response(true, 'Successfully logged out the user!', 200));
     }
 
