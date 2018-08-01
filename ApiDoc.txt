@@ -231,3 +231,113 @@ if status = true then
         "message": "Pool created successfully!",
         "error_code": 200
     }
+
+11. getAvailablePool
+
+ URL : 13.81.58.191/dev.smartpool.com/api/action/getAvailablePool
+ Method : POST
+ Headers : 
+    Content-Type:application/x-www-form-urlencoded
+    Accept:application/json
+    AccessToken:jBAlNasEkPneBete
+ Body : 
+    x-www-form-urlencoded
+    start_longitude:77.0353033
+    start_latitude:28.4657163
+    end_longitude:77.0822128
+    end_latitude:28.5550838
+ Response :
+    {
+        "status": true,
+        "message": "Pool data received!",
+        "error_code": 200,
+        "data": [
+            {
+                "id": 3,
+                "user_id": 9,
+                "start_location": "Ganit Softech",
+                "start_longitude": "77.0353033",
+                "start_latitude": "28.4657163",
+                "end_location": "Near IGI Airport Terminal 3 Metro Station Indira Gandhi International Airport New Delhi Delhi",
+                "end_longitude": "77.099958",
+                "end_latitude": "28.556162",
+                "timeframe": "30 min",
+                "preference": "all",
+                "num_of_poolers": "3",
+                "luggage_capacity": "10kg",
+                "expected_fare": "450",
+                "per_person_fare": "150",
+                "seats_full": "0",
+                "created_at": "2018-08-01 05:39:14",
+                "updated_at": "2018-08-01 05:39:14",
+                "start_distance": 0,
+                "end_distance": 1.74,
+                "radius": "2",
+                "first_name": "api",
+                "last_name": "Test",
+                "app_user_id": "sp_bjsd876sadsadj",
+                "gender": "female",
+                "api_token": "Ve9E1Yd0kJgwqsKk",
+                "nature": "intro",
+                "profession": "Business"
+            },
+            {
+                "id": 6,
+                "user_id": 9,
+                "start_location": "Ganit Softech",
+                "start_longitude": "77.0353033",
+                "start_latitude": "28.4657163",
+                "end_location": "Near IGI Airport Terminal 3 Metro Station Indira Gandhi International Airport New Delhi Delhi",
+                "end_longitude": "77.072714",
+                "end_latitude": "28.559314",
+                "timeframe": "30 min",
+                "preference": "best match",
+                "num_of_poolers": "3",
+                "luggage_capacity": "10kg",
+                "expected_fare": "450",
+                "per_person_fare": "150",
+                "seats_full": "0",
+                "created_at": "2018-08-01 05:40:49",
+                "updated_at": "2018-08-01 05:40:49",
+                "start_distance": 0,
+                "end_distance": 1.04,
+                "radius": "2",
+                "first_name": "api",
+                "last_name": "Test",
+                "app_user_id": "sp_bjsd876sadsadj",
+                "gender": "female",
+                "api_token": "Ve9E1Yd0kJgwqsKk",
+                "nature": "intro",
+                "profession": "Business"
+            },
+            {
+                "id": 7,
+                "user_id": 9,
+                "start_location": "Ganit Softech",
+                "start_longitude": "77.0353033",
+                "start_latitude": "28.4657163",
+                "end_location": "Dwarka",
+                "end_longitude": "77.067995",
+                "end_latitude": "28.564289",
+                "timeframe": "30 min",
+                "preference": "female",
+                "num_of_poolers": "3",
+                "luggage_capacity": "10kg",
+                "expected_fare": "450",
+                "per_person_fare": "150",
+                "seats_full": "0",
+                "created_at": "2018-08-01 05:41:16",
+                "updated_at": "2018-08-01 05:41:16",
+                "start_distance": 0,
+                "end_distance": 1.72,
+                "radius": "2",
+                "first_name": "api",
+                "last_name": "Test",
+                "app_user_id": "sp_bjsd876sadsadj",
+                "gender": "female",
+                "api_token": "Ve9E1Yd0kJgwqsKk",
+                "nature": "intro",
+                "profession": "Business"
+            }
+        ]
+    }
