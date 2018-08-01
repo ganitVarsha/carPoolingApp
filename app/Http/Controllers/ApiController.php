@@ -18,8 +18,8 @@ class ApiController extends Controller {
      * @since 30-07-2018
      */
     public function setPool(Request $request) {
-        if (!empty($request->accessToken) || in_array($request->accessToken, $request->session()->get('accessTokens'))) {
-            $user_id = User::getUserIdOnToken($request->accessToken);
+        if (!empty($request->header('AccessToken')) || in_array($request->header('AccessToken'), $request->session()->get('accessTokens'))) {
+            $user_id = User::getUserIdOnToken($request->header('AccessToken'));
             $pool = new Pool();
             $pool->user_id = $user_id[0]->id;
             $pool->start_location = $request->start_location;
@@ -59,7 +59,7 @@ class ApiController extends Controller {
      * @return [json] user object
      */
     public function getPool(Request $request) {
-        if (in_array($request->accessToken, $request->session()->get('accessTokens'))) {
+        if (in_array($request->header('AccessToken'), $request->session()->get('accessTokens'))) {
             $data = Pool::getAvailablePool($request->longitude, $request->latitude, $request->preference);
             if (!empty($data)) {
                 return response()->json(Json::response(true, 'Pool data received!', 200, $data));
