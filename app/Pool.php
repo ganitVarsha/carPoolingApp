@@ -37,6 +37,7 @@ class Pool extends Model {
                                 . "FROM pools "
                                 . "LEFT JOIN users on users.id = pools.user_id "
                                 . "WHERE num_of_poolers <> seats_full "
+                                . "and pool_end_time > CURRENT_TIME() "
                                 . "$preference_condition "
                                 . "HAVING (start_distance < ( radius" . " + " . ($attempt * 500) . ")" . " and end_distance < (radius " . " + " . ($attempt * 0.500) . ")) "
                                 . "ORDER BY start_distance "

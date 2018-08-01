@@ -35,7 +35,15 @@ class ApiController extends Controller {
             $pool->expected_fare = $request->expected_fare;
             $pool->per_person_fare = $request->per_person_fare;
             $pool->seats_full = $request->seats_full;
-
+            if($request->timeframe == "15 min"){
+                $pool->pool_end_time = date('Y-m-d H:i:s', strtotime("+15 minutes"));
+            }
+            else if($request->timeframe == "30 min"){
+                $pool->pool_end_time = date('Y-m-d H:i:s', strtotime("+30 minutes"));
+            }
+            else if($request->timeframe == "1 hour"){
+                $pool->pool_end_time = date('Y-m-d H:i:s', strtotime("+60 minutes"));
+            }
             try {
                 if ($pool->save()) {
                     return response()->json(Json::response(true, 'Pool created successfully!', 200));

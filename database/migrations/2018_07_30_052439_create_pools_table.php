@@ -29,6 +29,7 @@ class CreatePoolsTable extends Migration
             $table->string('expected_fare', 5)->nullable();
             $table->string('per_person_fare', 5)->nullable();
             $table->string('seats_full', 3)->nullable()->default(0);
+            $table->dateTime('pool_end_time')->nullable();
             $table->timestamps();
         });
     }
