@@ -209,9 +209,9 @@ if status = true then
  Headers : 
     Content-Type:application/x-www-form-urlencoded
     Accept:application/json
+    AccessToken:jBAlNasEkPneBete
  Body : 
     x-www-form-urlencoded
-    accessToken:jBAlNasEkPneBete
     start_location:Ganit Softech
     start_longitude:77.0353033
     start_latitude:28.4657163
