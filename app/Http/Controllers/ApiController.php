@@ -24,10 +24,10 @@ class ApiController extends Controller {
             $pool->user_id = $user_id[0]->id;
             $pool->start_location = $request->start_location;
             $pool->start_longitude = $request->start_longitude;
-            $pool->start_lattitude = $request->start_lattitude;
+            $pool->start_latitude = $request->start_latitude;
             $pool->end_location = $request->end_location;
             $pool->end_longitude = $request->end_longitude;
-            $pool->end_lattitude = $request->end_lattitude;
+            $pool->end_latitude = $request->end_latitude;
             $pool->timeframe = $request->timeframe;
             $pool->preference = $request->preference;
             $pool->num_of_poolers = $request->num_of_poolers;
