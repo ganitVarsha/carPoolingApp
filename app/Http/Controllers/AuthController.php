@@ -8,6 +8,8 @@ use Carbon\Carbon;
 use App\User;
 use App\Transformers\Json;
 use App\Classes\Common;
+use Illuminate\Database\QueryException as QueryException;
+use \Illuminate\Support\Facades\Cache;
 
 class AuthController extends Controller {
 
@@ -17,6 +19,7 @@ class AuthController extends Controller {
         'code' => '401',
         'message' => 'Acces Token mismatch!'
     ];
+    private $otp = '';
 
     /**
      * Create user via Passport authentication
@@ -138,15 +141,16 @@ class AuthController extends Controller {
      * @since 30-07-2018
      */
     public function signupViaPhone(Request $request) {
-        $request->validate([
-            'phone' => 'required|string|unique:users'
-        ]);
-        $user = new User;
+        // Get user record
+        $user = User::where('phone', $request->phone)->first();
 
-        $user->phone = $request->phone;
-        $user->app_user_id = 'sp_' . Common::randomString(5) . Common::randomString(5);
-        if ($user->save()) {
-            return response()->json(Json::response(true, 'Successfully created user!', 200));
+        // Check Condition Mobile No. Found or Not
+        if (empty($user)) {
+            $this->otp = rand(1000, 9999);
+            Cache::remember($request->phone . "_otp", '10', function () {
+                return $this->otp;
+            });
+            return response()->json(Json::response(true, 'OTP for signup generated!', 200, ['otp' => $this->otp]));
         } else {
             return response()->json(Json::response(false, 'User with this phone number already exists!', 401));
         }
@@ -171,10 +175,12 @@ class AuthController extends Controller {
 
         // Set Auth Details
         \Auth::login($user);
-        $otp = rand(1000, 9999);
-        $request->session()->put($request->phone . "_otp", $otp);
-
-        return response()->json(Json::response(true, 'Logged in successfully. Please enter OTP', 200, ['otp' => $otp, 'user_id' => $user->app_user_id]));
+        $this->otp = rand(1000, 9999);
+        Cache::remember($request->phone . "_otp", '10', function () {
+            return $this->otp;
+        });
+        $this->otp = "";
+        return response()->json(Json::response(true, 'Logged in successfully. Please enter OTP', 200, ['otp' => Cache::get($request->phone . "_otp"), 'user_id' => $user->app_user_id]));
     }
 
     /**
@@ -187,7 +193,24 @@ class AuthController extends Controller {
      * @since 26-07-2018
      */
     public function matchOTP(Request $request) {
-        if ($request->session()->get($request->phone . "_otp") == $request->otp) {
+        if (Cache::pull($request->phone . "_otp") == $request->otp) {
+            if ($request->signup_otp) {
+                $request->validate([
+                    'phone' => 'required|string|unique:users'
+                ]);
+                $user = new User;
+                $user->phone = $request->phone;
+                $user->app_user_id = 'sp_' . Common::randomString(5) . Common::randomString(5);
+                try {
+                    if ($user->save()) {
+                        return response()->json(Json::response(true, 'User created successfully!', 200));
+                    } else {
+                        return response()->json(Json::response(false, 'Error in creating new user!', 401));
+                    }
+                } catch (QueryException $e) {
+                    return response()->json(Json::response(false, $e->getMessage(), 401));
+                }
+            }
             return response()->json(Json::response(true, 'OTP Matched!', 200));
         } else {
             return response()->json(Json::response(false, 'OTP Mismatch!', 401));
@@ -204,7 +227,7 @@ class AuthController extends Controller {
      */
     public function mobileLogout(Request $request) {
         $request->session()->forget('accessTokens.' . $request->username);
-        $request->session()->forget($request->username . "_otp");
+        Cache::forget($request->username . "_otp");
         return response()->json(Json::response(true, 'Successfully logged out the user!', 200));
     }
 

@@ -12,8 +12,11 @@
  Response :
     {
         "status": true,
-        "message": "Successfully created user!",
-        "error_code": 200
+        "message": "OTP for signup generated!",
+        "error_code": 200,
+        "data": {
+            "otp": 3287
+        }
     }
 
 
@@ -71,12 +74,20 @@
  Body : raw
     {
         "phone":"9638527410",
-	"otp": "8694"
+	"otp": "8694",
+	"signup_otp" : false
     }
  Response :
     {
         "status": true,
         "message": "OTP Matched!",
+        "error_code": 200
+    }
+
+if status = true then
+    {
+        "status": true,
+        "message": "User created successfully!",
         "error_code": 200
     }
 
