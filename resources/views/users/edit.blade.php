@@ -10,6 +10,16 @@
 <!-- Main content -->
 @section('content')
 
+@if (count($errors) > 0)
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
 <form method="post" action="{{action('UserController@update', $user->id)}}">
     @csrf
     {{ method_field('PUT')}}
@@ -31,14 +41,16 @@
         <div class="col-md-4">
             <label for="Email">Email:</label></div>
         <div class="form-group col-md-4">
-            <input type="email" class="form-control" name="email" value="{{$user->email}}">
+            <input type="hidden" class="form-control" name="old_email" value="{{$user->email}}">
+            <input type="email" class="form-control" name="email" value="{{$user->email}}" <?php echo ($user->email != '') ? 'readonly' : ''; ?>>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
             <label for="phone">Phone Number:</label></div>
         <div class="form-group col-md-4">
-            <input type="text" class="form-control" name="phone" id="phone" value="{{$user->phone}}" maxlength="10">
+            <input type="hidden" class="form-control" name="old_phone" value="{{$user->phone}}">
+            <input type="text" class="form-control" name="phone" id="phone" value="{{$user->phone}}" maxlength="10"  <?php echo ($user->phone != '') ? 'readonly' : ''; ?>>
         </div>
     </div>
     <div class="row">
@@ -123,7 +135,7 @@ $(document).ready(function () {
     $('input').focusout(function () {
         $('button[type="submit"]').prop('disabled', false);
     });
-    
+
     $("#phone").keydown(function (e) {
         // Allow: backspace, delete, tab, escape, enter and .
         if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
