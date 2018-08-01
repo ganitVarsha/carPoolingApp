@@ -341,3 +341,21 @@ if status = true then
             }
         ]
     }
+
+11. connectToPool
+
+ URL : 13.81.58.191/dev.smartpool.com/api/action/connectToPool
+ Method : POST
+ Headers : 
+    Content-Type:application/x-www-form-urlencoded
+    Accept:application/json
+    AccessToken:jBAlNasEkPneBete
+ Body : 
+    x-www-form-urlencoded
+    pool_id:1
+ Response :
+    {
+        "status": true,
+        "message": "Pool Rider saved successfully!",
+        "error_code": 200
+    }

@@ -57,4 +57,17 @@ class Pool extends Model {
         }
     }
 
+    /**
+     * @param int $pool_id pool id
+     * @return boolean true or false
+     * @author Varsha Mittal <varsha.mittal@ganitsoftech.com>
+     * @since 01-08-2018
+     */
+    public static function updateSeat($pool_id) {
+        DB::table('pools')
+                ->whereId($pool_id)
+                ->increment('seats_full');
+        return true;
+    }
+
 }
