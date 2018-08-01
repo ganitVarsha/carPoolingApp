@@ -60,7 +60,8 @@ class ApiController extends Controller {
      */
     public function getPool(Request $request) {
         if (in_array($request->header('AccessToken'), $request->session()->get('accessTokens'))) {
-            $data = Pool::getAvailablePool($request->longitude, $request->latitude, $request->preference);
+            $user = User::where('api_token', $request->header('AccessToken'))->first();
+            $data = Pool::getAvailablePool($request->start_longitude, $request->start_latitude, $request->end_longitude, $request->end_latitude, $user);
             if (!empty($data)) {
                 return response()->json(Json::response(true, 'Pool data received!', 200, $data));
             } else {
