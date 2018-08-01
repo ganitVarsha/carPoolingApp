@@ -214,10 +214,10 @@ if status = true then
     accessToken:jBAlNasEkPneBete
     start_location:Ganit Softech
     start_longitude:77.0353033
-    start_lattitude:28.4657163
+    start_latitude:28.4657163
     end_location:IGI Airport Terminal 3 Metro Station Indira Gandhi International Airport New Delhi Delhi
     end_longitude:77.0822128
-    end_lattitude:28.5550838
+    end_latitude:28.5550838
     timeframe:30 min
     preference:all
     num_of_poolers:3
