@@ -342,7 +342,7 @@ if status = true then
         ]
     }
 
-11. connectToPool
+12. connectToPool
 
  URL : 13.81.58.191/dev.smartpool.com/api/action/connectToPool
  Method : POST
