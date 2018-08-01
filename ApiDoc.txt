@@ -224,7 +224,7 @@ if status = true then
     luggage_capacity:10kg
     expected_fare:450
     per_person_fare:150
-    seats_full:1
+    seats_full:0
  Response :
     {
         "status": true,
