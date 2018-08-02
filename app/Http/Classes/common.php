@@ -64,7 +64,7 @@ class Common {
     }
 
     /**
-     * Logging user activity
+     * Send push notification to android or iOS
      * @param $sendAsData 1->send as data, 0-> send as notification
      * @param $data contains data ike title, body, image, icon, sound etc
      * @param $registrationIds ids on which msg is to be delivered
