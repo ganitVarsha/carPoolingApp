@@ -76,6 +76,22 @@ class User extends Authenticatable {
     }
 
     /**
+     * @params string $user_relevant_id app_id/access_token/id of user performing action
+     * @return int user id
+     * @author Varsha Mittal <varsha.mittal@ganitsoftech.com>
+     * @since 02-08-2018
+     */
+    public static function getUserRelevantId($user_relevant_id) {
+        $data = DB::table('users')
+                ->where(['api_token' => $user_relevant_id])
+                ->orWhere(['app_user_id' => $user_relevant_id])
+                ->orWhere(['id' => $user_relevant_id])
+                ->select('id')
+                ->get();
+        return $data->toArray();
+    }
+
+    /**
      * @params string $app_user_id app_user_id
      * @return array user profile data
      * @author Varsha Mittal <varsha.mittal@ganitsoftech.com>
@@ -106,7 +122,7 @@ class User extends Authenticatable {
                         ->update($updateData);
             } catch (QueryException $e) {
                 return false;
-                error_log("SetProfileData for $app_user_id :". $e->getMessage());
+                error_log("SetProfileData for $app_user_id :" . $e->getMessage());
             }
             return true;
         }

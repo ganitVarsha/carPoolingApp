@@ -49,6 +49,7 @@ class AuthController extends Controller {
             'password' => bcrypt($request->password)
         ]);
         $user->save();
+        Common::logActivity($user->id(), 'Normal signup via Auth');
         return response()->json(Json::response(true, 'User created successfully.', 200));
     }
 
@@ -84,6 +85,7 @@ class AuthController extends Controller {
         // to use this key, use : $request->session()->get('accessTokens'.$request->email)
 
         User::saveToken($request->email, $tokenResult->accessToken);
+        Common::logActivity($tokenResult->accessToken, 'Normal signup via Auth');
         return response()->json(Json::response(true, 'Login success.', 401, ['access_token' => $tokenResult->accessToken,
                             'otp' => $otp,
                             'token_type' => 'Bearer',
@@ -103,6 +105,8 @@ class AuthController extends Controller {
 //        User::removeToken($request->username, $request->accessToken);
         $request->session()->forget('accessTokens.' . $request->username);
         $request->session()->forget($request->username . "_otp");
+        $userId = User::where('phone', $request->username)->orWhere('email', $request->username)->first();
+        Common::logActivity($userId->id, 'Normal logout via Auth');
         return response()->json(Json::response(true, 'Successfully logged out.', 200));
     }
 
@@ -129,6 +133,7 @@ class AuthController extends Controller {
         $request->session()->put('accessTokens.' . $request->phone, $accessToken);
 
         User::saveToken($request->phone, $accessToken);
+        Common::logActivity($accessToken, 'createToken via Auth');
         return response()->json(Json::response(true, 'Access Token created successfully!', 200, ['access_token' => $accessToken]));
     }
 
@@ -147,9 +152,11 @@ class AuthController extends Controller {
         // Check Condition Mobile No. Found or Not
         if (empty($user)) {
             $this->otp = rand(1000, 9999);
+            Cache::forget($request->phone . "_otp");
             Cache::remember($request->phone . "_otp", '10', function () {
                 return $this->otp;
             });
+            Common::logActivity('', 'signupViaPhone request via Auth for ' . $request->phone);
             return response()->json(Json::response(true, 'OTP for signup generated!', 200, ['otp' => $this->otp]));
         } else {
             return response()->json(Json::response(false, 'User with this phone number already exists!', 401));
@@ -176,10 +183,12 @@ class AuthController extends Controller {
         // Set Auth Details
         \Auth::login($user);
         $this->otp = rand(1000, 9999);
+        Cache::forget($request->phone . "_otp");
         Cache::remember($request->phone . "_otp", '10', function () {
             return $this->otp;
         });
         $this->otp = "";
+        Common::logActivity($user->app_user_id, 'MobileLogin request via Auth');
         return response()->json(Json::response(true, 'Logged in successfully. Please enter OTP', 200, ['otp' => Cache::get($request->phone . "_otp"), 'user_id' => $user->app_user_id]));
     }
 
@@ -200,9 +209,10 @@ class AuthController extends Controller {
                 ]);
                 $user = new User;
                 $user->phone = $request->phone;
-                $user->app_user_id = 'sp_' . Common::randomString(5) . Common::randomString(5);
+                $app_user_id = $user->app_user_id = 'sp_' . Common::randomString(5) . Common::randomString(5);
                 try {
                     if ($user->save()) {
+                        Common::logActivity($app_user_id, 'matchOTP for signup via Auth');
                         return response()->json(Json::response(true, 'User created successfully!', 200));
                     } else {
                         return response()->json(Json::response(false, 'Error in creating new user!', 401));
@@ -211,6 +221,8 @@ class AuthController extends Controller {
                     return response()->json(Json::response(false, $e->getMessage(), 401));
                 }
             }
+            $user = User::where('phone', $request->phone)->first();
+            Common::logActivity($user->id, 'matchOTP for login via Auth');
             return response()->json(Json::response(true, 'OTP Matched!', 200));
         } else {
             return response()->json(Json::response(false, 'OTP Mismatch!', 401));
@@ -229,6 +241,8 @@ class AuthController extends Controller {
         $request->session()->forget('accessTokens.' . $request->username);
         Cache::forget($request->username . "_otp");
         User::saveToken($request->username, '');
+        $userId = User::where('phone', $request->username)->orWhere('email', $request->username)->first();
+        Common::logActivity($userId->id, 'mobileLogout via Auth');
         return response()->json(Json::response(true, 'Successfully logged out the user!', 200));
     }
 
@@ -243,8 +257,10 @@ class AuthController extends Controller {
     public function getProfile(Request $request) {
         $data = User::getProfileData($request->app_user_id);
         if (!empty($data)) {
+            Common::logActivity($request->app_user_id, 'GetProfile via Auth');
             return response()->json(Json::response(true, 'User Exists!', 200, $data));
         } else {
+            Common::logActivity($request->app_user_id, 'Error in GetProfile via Auth');
             return response()->json(Json::response(false, 'User not found!', 401));
         }
     }
@@ -269,8 +285,10 @@ class AuthController extends Controller {
         ];
         $data = User::setProfileData($request->app_user_id, $updateData);
         if ($data) {
+            Common::logActivity($request->app_user_id, 'setProfile via Auth');
             return response()->json(Json::response(true, 'Profile updated successfully!', 200));
         } else {
+            Common::logActivity($request->app_user_id, 'error in setProfile via Auth');
             return response()->json(Json::response(false, 'Profile data not updated! Please try again with valid data!', 401));
         }
     }
