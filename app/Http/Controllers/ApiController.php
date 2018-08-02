@@ -9,6 +9,7 @@ use App\Pool;
 use App\Transformers\Json;
 use \Illuminate\Database\QueryException;
 use App\PoolRider;
+use App\Classes\Common;
 
 class ApiController extends Controller {
 
@@ -45,16 +46,21 @@ class ApiController extends Controller {
             }
             try {
                 if ($pool->save()) {
+                    Common::logActivity($user_id[0]->id, 'Pool Created via API', $pool->id());
                     return response()->json(Json::response(true, 'Pool created successfully!', 200));
                 } else {
+                    Common::logActivity($user_id[0]->id, 'Error while creating pool via API');
                     return response()->json(Json::response(false, 'Pool not created! Please try again!', 401));
                 }
             } catch (QueryException $ex) {
+                Common::logActivity($request->header('AccessToken'), 'Error while creating pool | Query Exception via API');
                 return response()->json(Json::response(false, $ex->getMessage(), 401));
             } catch (Exception $ex) {
+                Common::logActivity($request->header('AccessToken'), 'Error while creating pool | normal Exception via API');
                 return response()->json(Json::response(false, $ex->getMessage(), 401));
             }
         } else {
+            Common::logActivity($request->header('AccessToken'), 'Error while creating pool | Access Token Mismatch via API');
             return response()->json(Json::$accessError);
         }
     }
@@ -70,11 +76,14 @@ class ApiController extends Controller {
             $user = User::where('api_token', $request->header('AccessToken'))->first();
             $data = Pool::getAvailablePool($request->start_longitude, $request->start_latitude, $request->end_longitude, $request->end_latitude, $user);
             if (!empty($data)) {
+                Common::logActivity($request->header('AccessToken'), 'Pool data received via API');
                 return response()->json(Json::response(true, 'Pool data received!', 200, $data));
             } else {
-                return response()->json(Json::response(false, 'No Pool available!', 401));
+                Common::logActivity($request->header('AccessToken'), 'No Pool data available via API');
+                return response()->json(Json::response(true, 'No Pool available!', 200));
             }
         } else {
+            Common::logActivity($request->header('AccessToken'), 'Error in fetching Pool data | Access Token Mismatch via API');
             return response()->json(Json::$accessError);
         }
     }
@@ -95,20 +104,25 @@ class ApiController extends Controller {
             try {
                 if ($poolRider->save()) {
                     if (Pool::updateSeat($request->pool_id)) {
+                        Common::logActivity($request->header('AccessToken'), 'connectToPool via API', $request->pool_id);
                         return response()->json(Json::response(true, 'Pool Rider saved successfully!', 200));
                     } else {
                         $id = $poolRider->id();
                         PoolRider::delete($id);
+                        Common::logActivity($request->header('AccessToken'), 'error in connectToPool update seat count failed via API', $request->pool_id);
                         return response()->json(Json::response(false, 'Error in adding rider to pool!', 401));
                     }
                 } else {
+                    Common::logActivity($request->header('AccessToken'), 'error in saving into pool_riders table connectToPool via API', $request->pool_id);
                     return response()->json(Json::response(false, 'Error in adding rider to pool!', 401));
                 }
             } catch (QueryException $e) {
                 error_log("connectToPool " . date('Y-m-d H:i:s') . ":" . $e->getMessage());
+                Common::logActivity($request->header('AccessToken'), 'connectToPool | Query Exception via API', $request->pool_id);
                 return response()->json(Json::response(false, 'Error in adding rider to pool!', 401));
             }
         } else {
+                Common::logActivity($request->header('AccessToken'), 'connectToPool | Access Token mismatch via API', $request->pool_id);
             return response()->json(Json::$accessError);
         }
     }
