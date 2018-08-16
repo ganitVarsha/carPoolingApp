@@ -28,7 +28,9 @@ class SettingController extends Controller {
         $commonFunction = new Common; 
         $list = $commonFunction->mapArray($list, 'settings_name');
         if (auth()->user()->isAdmin == 1) {
-            return view("settings.$settings_type", [
+            return view("settings.index", [
+                'title' => ucfirst($settings_type).' Settings',
+                'redirect_to' => 'settings/'.strtolower($settings_type),
                 'list' => $list,
                 'updated' => $updated
             ]);
