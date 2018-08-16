@@ -82,3 +82,4 @@ Note:
                     php artisan db:seed
                     php artisan db:seed --class=SettingsTableSeeder
 5. To make the folder work in IIS (windows server) : make sure .env file exists, posts are correct in config files and all lines are in new line of .env.
+6. for session life, changed in .env, bootstrap/cache/config.php and config/sessions.php

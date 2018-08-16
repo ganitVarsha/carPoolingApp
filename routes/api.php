@@ -22,16 +22,16 @@ Route::group([
         ], function () {
     Route::post('login', 'AuthController@login');
     Route::post('signup', 'AuthController@signup');
-    Route::post('signupViaPhone', 'AuthController@signupViaPhone');
     Route::post('logout', 'AuthController@logout');
+    Route::post('signupViaPhone', 'AuthController@signupViaPhone');
     Route::post('matchOTP', 'AuthController@matchOTP');
     Route::post('mobileLogin', 'AuthController@mobileLogin');
+    Route::post('createToken', 'AuthController@createToken');
     Route::post('mobileLogout', 'AuthController@mobileLogout');
     Route::post('password/email', 'Auth\ForgotPasswordController@getResetToken');
     Route::post('password/reset', 'Auth\ResetPasswordController@reset');
     Route::get('getProfile', 'AuthController@getProfile');
     Route::post('setProfile', 'AuthController@setProfile');
-    Route::post('createToken', 'AuthController@createToken');
 
     Route::group([
         'middleware' => 'auth:api'
@@ -45,4 +45,6 @@ Route::group([
     'prefix' => 'action'
         ], function () {
     Route::post('addPool', 'ApiController@setPool');
+    Route::post('getAvailablePool', 'ApiController@getPool');
+    Route::post('connectToPool', 'ApiController@connectToPool');
 });

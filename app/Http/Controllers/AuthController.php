@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\User;
 use App\Transformers\Json;
+use App\Classes\Common;
+use Illuminate\Database\QueryException as QueryException;
+use \Illuminate\Support\Facades\Cache;
 
 class AuthController extends Controller {
 
@@ -16,6 +19,7 @@ class AuthController extends Controller {
         'code' => '401',
         'message' => 'Acces Token mismatch!'
     ];
+    private $otp = '';
 
     /*
      * Create a random string
@@ -62,12 +66,8 @@ class AuthController extends Controller {
             'password' => bcrypt($request->password)
         ]);
         $user->save();
-        return response()->json([
-                    'status' => true,
-                    'error' => [],
-                    'code' => '200',
-                    'message' => 'Successfully created user!'
-                        ], 201);
+        Common::logActivity($user->id(), 'Normal signup via Auth');
+        return response()->json(Json::response(true, 'User created successfully.', 200));
     }
 
     /**
@@ -90,12 +90,7 @@ class AuthController extends Controller {
         ]);
         $credentials = request(['email', 'password']);
         if (!Auth::attempt($credentials))
-            return response()->json([
-                        'status' => false,
-                        'error' => ['message' => 'Unauthorized'],
-                        'code' => '401',
-                        'message' => 'Unauthorized'
-                            ], 401);
+            return response()->json(Json::response(false, 'Unauthorized user.', 401));
         $user = $request->user();
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
@@ -107,18 +102,14 @@ class AuthController extends Controller {
         // to use this key, use : $request->session()->get('accessTokens'.$request->email)
 
         User::saveToken($request->email, $tokenResult->accessToken);
-        return response()->json([
-                    'status' => true,
-                    'error' => [],
-                    'code' => '200',
-                    'data' => ['access_token' => $tokenResult->accessToken,
-                        'otp' => $otp,
-                        'token_type' => 'Bearer',
-                        'expires_at' => Carbon::parse(
-                                $tokenResult->token->expires_at
-                        )->toDateTimeString()
-                    ]
-        ]);
+        Common::logActivity($tokenResult->accessToken, 'Normal signup via Auth');
+        return response()->json(Json::response(true, 'Login success.', 401, ['access_token' => $tokenResult->accessToken,
+                            'otp' => $otp,
+                            'token_type' => 'Bearer',
+                            'expires_at' => Carbon::parse(
+                                    $tokenResult->token->expires_at
+                            )->toDateTimeString()
+        ]));
     }
 
     /**
@@ -131,12 +122,9 @@ class AuthController extends Controller {
 //        User::removeToken($request->username, $request->accessToken);
         $request->session()->forget('accessTokens.' . $request->username);
         $request->session()->forget($request->username . "_otp");
-        return response()->json([
-                    'status' => true,
-                    'error' => [],
-                    'code' => '200',
-                    'message' => 'Successfully logged out'
-        ]);
+        $userId = User::where('phone', $request->username)->orWhere('email', $request->username)->first();
+        Common::logActivity($userId->id, 'Normal logout via Auth');
+        return response()->json(Json::response(true, 'Successfully logged out.', 200));
     }
 
     //for mobile on the basis of phone number
@@ -157,11 +145,11 @@ class AuthController extends Controller {
         if (empty($user) || $request->phone != $user->phone) {
             return response()->json(Json::response(false, 'Mobile number not found in our system.', 401));
         }
-
-        $accessToken = $this->randomString();
+        $accessToken = Common::randomString();
         $request->session()->put('accessTokens.' . $request->phone, $accessToken);
 
         User::saveToken($request->phone, $accessToken);
+        Common::logActivity($accessToken, 'createToken via Auth');
         return response()->json(Json::response(true, 'Access Token created successfully!', 200, ['access_token' => $accessToken]));
     }
 
@@ -174,15 +162,18 @@ class AuthController extends Controller {
      * @since 30-07-2018
      */
     public function signupViaPhone(Request $request) {
-        $request->validate([
-            'phone' => 'required|string|unique:users'
-        ]);
-        $user = new User;
+        // Get user record
+        $user = User::where('phone', $request->phone)->first();
 
-        $user->phone = $request->phone;
-        $user->app_user_id = 'sp_' . $this->randomString(10);
-        if ($user->save()) {
-            return response()->json(Json::response(true, 'Successfully created user!', 200));
+        // Check Condition Mobile No. Found or Not
+        if (empty($user)) {
+            $this->otp = rand(1000, 9999);
+            Cache::forget($request->phone . "_otp");
+            Cache::remember($request->phone . "_otp", '10', function () {
+                return $this->otp;
+            });
+            Common::logActivity('', 'signupViaPhone request via Auth for ' . $request->phone);
+            return response()->json(Json::response(true, 'OTP for signup generated!', 200, ['otp' => $this->otp]));
         } else {
             return response()->json(Json::response(false, 'User with this phone number already exists!', 401));
         }
@@ -207,10 +198,14 @@ class AuthController extends Controller {
 
         // Set Auth Details
         \Auth::login($user);
-        $otp = rand(1000, 9999);
-        $request->session()->put($request->phone . "_otp", $otp);
-
-        return response()->json(Json::response(true, 'Logged in successfully. Please enter OTP', 200, ['otp' => $otp, 'user_id' => $user->app_user_id]));
+        $this->otp = rand(1000, 9999);
+        Cache::forget($request->phone . "_otp");
+        Cache::remember($request->phone . "_otp", '10', function () {
+            return $this->otp;
+        });
+        $this->otp = "";
+        Common::logActivity($user->app_user_id, 'MobileLogin request via Auth');
+        return response()->json(Json::response(true, 'Logged in successfully. Please enter OTP', 200, ['otp' => Cache::get($request->phone . "_otp"), 'user_id' => $user->app_user_id]));
     }
 
     /**
@@ -223,7 +218,27 @@ class AuthController extends Controller {
      * @since 26-07-2018
      */
     public function matchOTP(Request $request) {
-        if ($request->session()->get($request->phone . "_otp") == $request->otp) {
+        if (Cache::pull($request->phone . "_otp") == $request->otp) {
+            if ($request->signup_otp) {
+                $request->validate([
+                    'phone' => 'required|string|unique:users'
+                ]);
+                $user = new User;
+                $user->phone = $request->phone;
+                $app_user_id = $user->app_user_id = 'sp_' . Common::randomString(5) . Common::randomString(5);
+                try {
+                    if ($user->save()) {
+                        Common::logActivity($app_user_id, 'matchOTP for signup via Auth');
+                        return response()->json(Json::response(true, 'User created successfully!', 200));
+                    } else {
+                        return response()->json(Json::response(false, 'Error in creating new user!', 401));
+                    }
+                } catch (QueryException $e) {
+                    return response()->json(Json::response(false, $e->getMessage(), 401));
+                }
+            }
+            $user = User::where('phone', $request->phone)->first();
+            Common::logActivity($user->id, 'matchOTP for login via Auth');
             return response()->json(Json::response(true, 'OTP Matched!', 200));
         } else {
             return response()->json(Json::response(false, 'OTP Mismatch!', 401));
@@ -240,7 +255,10 @@ class AuthController extends Controller {
      */
     public function mobileLogout(Request $request) {
         $request->session()->forget('accessTokens.' . $request->username);
-        $request->session()->forget($request->username . "_otp");
+        Cache::forget($request->username . "_otp");
+        User::saveToken($request->username, '');
+        $userId = User::where('phone', $request->username)->orWhere('email', $request->username)->first();
+        Common::logActivity($userId->id, 'mobileLogout via Auth');
         return response()->json(Json::response(true, 'Successfully logged out the user!', 200));
     }
 
@@ -255,8 +273,10 @@ class AuthController extends Controller {
     public function getProfile(Request $request) {
         $data = User::getProfileData($request->app_user_id);
         if (!empty($data)) {
+            Common::logActivity($request->app_user_id, 'GetProfile via Auth');
             return response()->json(Json::response(true, 'User Exists!', 200, $data));
         } else {
+            Common::logActivity($request->app_user_id, 'Error in GetProfile via Auth');
             return response()->json(Json::response(false, 'User not found!', 401));
         }
     }
@@ -281,8 +301,10 @@ class AuthController extends Controller {
         ];
         $data = User::setProfileData($request->app_user_id, $updateData);
         if ($data) {
+            Common::logActivity($request->app_user_id, 'setProfile via Auth');
             return response()->json(Json::response(true, 'Profile updated successfully!', 200));
         } else {
+            Common::logActivity($request->app_user_id, 'error in setProfile via Auth');
             return response()->json(Json::response(false, 'Profile data not updated! Please try again with valid data!', 401));
         }
     }

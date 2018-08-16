@@ -12,8 +12,16 @@
  Response :
     {
         "status": true,
+<<<<<<< HEAD
         "message": "Successfully created user!",
         "error_code": 200
+=======
+        "message": "OTP for signup generated!",
+        "error_code": 200,
+        "data": {
+            "otp": 3287
+        }
+>>>>>>> branch_v
     }
 
 
@@ -71,7 +79,12 @@
  Body : raw
     {
         "phone":"9638527410",
+<<<<<<< HEAD
 	"otp": "8694"
+=======
+	"otp": "8694",
+	"signup_otp" : false
+>>>>>>> branch_v
     }
  Response :
     {
@@ -80,8 +93,20 @@
         "error_code": 200
     }
 
+<<<<<<< HEAD
 5. For mobileLogout
 
+=======
+if status = true then
+    {
+        "status": true,
+        "message": "User created successfully!",
+        "error_code": 200
+    }
+
+5. For mobileLogout
+
+>>>>>>> branch_v
  URL : 13.81.58.191/dev.smartpool.com/api/auth/mobileLogout
  Method : POST
  Headers : 
@@ -101,6 +126,8 @@
 6. To generate token for password reset : generate token
 
  URL : 13.81.58.191/dev.smartpool.com/api/auth/password/email
+<<<<<<< HEAD
+=======
  Method : POST
  Headers : 
     Accept:application/json
@@ -122,20 +149,98 @@
 7. To reset password
 
  URL : 13.81.58.191/dev.smartpool.com/api/auth/password/email
+>>>>>>> branch_v
  Method : POST
  Headers : 
     Accept:application/json
     Content-Type:application/json
  Body : raw
     {
+<<<<<<< HEAD
+        "email": "api@test.con"
+=======
         "email": "api@test.con",
         "password" : "123456",
         "password_confirmation" : "123456",
         "token" : "d949a4bd910f3fc3fd20c2a3faa49873e2f3f1302d8506c64125b7e3d8690a86"
+>>>>>>> branch_v
     }
  Response :
     {
         "status": true,
+<<<<<<< HEAD
+        "message": "Token generated!",
+        "error_code": 200,
+        "data": {
+            "token": "93bb4fde1b8c4b26224dda365af43f11f6d6951d8f4b39f55704875420d8c20c"
+        }
+=======
+        "message": "Password reset succesfully!",
+        "error_code": 200,
+        "data": "Your password has been reset!"
+>>>>>>> branch_v
+    }
+ 
+8. For getProfile
+
+<<<<<<< HEAD
+7. To reset password
+
+ URL : 13.81.58.191/dev.smartpool.com/api/auth/password/email
+=======
+ URL : 13.81.58.191/dev.smartpool.com/api/auth/getProfile?app_user_id=sp_hbashdsjadsadsajd
+ Method : GET
+ Response :
+    {
+        "status": true,
+        "message": "User Exists!",
+        "error_code": 200,
+        "data": {
+                    "id": 1,
+                    "first_name": "Varsha",
+                    "last_name": "Mittal",
+                    "gender": null,
+                    "dob": "0000-00-00",
+                    "email": "varsha.mittal@ganitsoftech.com",
+                    "isd": "+91",
+                    "phone": "8974561000",
+                    "profession": null,
+                    "nature": null
+                }
+    }
+
+9. For setProfile
+
+ URL : 13.81.58.191/dev.smartpool.com/api/auth/setProfile
+>>>>>>> branch_v
+ Method : POST
+ Headers : 
+    Accept:application/json
+    Content-Type:application/json
+ Body : raw
+    {
+<<<<<<< HEAD
+        "email": "api@test.con",
+        "password" : "123456",
+        "password_confirmation" : "123456",
+        "token" : "d949a4bd910f3fc3fd20c2a3faa49873e2f3f1302d8506c64125b7e3d8690a86"
+=======
+	"app_user_id":"sp_bjsd876sadsadj",
+	"first_name": "api",
+        "last_name": "Test",
+        "gender": "Female",
+        "dob": "1993-10-20",
+        "email": "api@test.con",
+        "isd": "+91",
+        "phone": "3692580147",
+        "profession": "Business",
+        "nature": "intro"
+>>>>>>> branch_v
+    }
+ Response :
+    {
+        "status": true,
+<<<<<<< HEAD
         "message": "Password reset succesfully!",
         "error_code": 200,
         "data": "Your password has been reset!"
@@ -191,3 +296,166 @@
         "error_code": 200
     }
 
+=======
+        "message": "Profile updated successfully!",
+        "error_code": 200
+    }
+
+10. CreatePool
+
+ URL : 13.81.58.191/dev.smartpool.com/api/action/addPool
+ Method : POST
+ Headers : 
+    Content-Type:application/x-www-form-urlencoded
+    Accept:application/json
+    AccessToken:jBAlNasEkPneBete
+ Body : 
+    x-www-form-urlencoded
+    start_location:Ganit Softech
+    start_longitude:77.0353033
+    start_latitude:28.4657163
+    end_location:IGI Airport Terminal 3 Metro Station Indira Gandhi International Airport New Delhi Delhi
+    end_longitude:77.0822128
+    end_latitude:28.5550838
+    timeframe:30 min
+    preference:all
+    num_of_poolers:3
+    luggage_capacity:10kg
+    expected_fare:450
+    per_person_fare:150
+    seats_full:0
+ Response :
+    {
+        "status": true,
+        "message": "Pool created successfully!",
+        "error_code": 200
+    }
+
+11. getAvailablePool
+
+ URL : 13.81.58.191/dev.smartpool.com/api/action/getAvailablePool
+ Method : POST
+ Headers : 
+    Content-Type:application/x-www-form-urlencoded
+    Accept:application/json
+    AccessToken:jBAlNasEkPneBete
+ Body : 
+    x-www-form-urlencoded
+    start_longitude:77.0353033
+    start_latitude:28.4657163
+    end_longitude:77.0822128
+    end_latitude:28.5550838
+ Response :
+    {
+        "status": true,
+        "message": "Pool data received!",
+        "error_code": 200,
+        "data": [
+            {
+                "id": 3,
+                "user_id": 9,
+                "start_location": "Ganit Softech",
+                "start_longitude": "77.0353033",
+                "start_latitude": "28.4657163",
+                "end_location": "Near IGI Airport Terminal 3 Metro Station Indira Gandhi International Airport New Delhi Delhi",
+                "end_longitude": "77.099958",
+                "end_latitude": "28.556162",
+                "timeframe": "30 min",
+                "preference": "all",
+                "num_of_poolers": "3",
+                "luggage_capacity": "10kg",
+                "expected_fare": "450",
+                "per_person_fare": "150",
+                "seats_full": "0",
+                "created_at": "2018-08-01 05:39:14",
+                "updated_at": "2018-08-01 05:39:14",
+                "start_distance": 0,
+                "end_distance": 1.74,
+                "radius": "2",
+                "first_name": "api",
+                "last_name": "Test",
+                "app_user_id": "sp_bjsd876sadsadj",
+                "gender": "female",
+                "api_token": "Ve9E1Yd0kJgwqsKk",
+                "nature": "intro",
+                "profession": "Business"
+            },
+            {
+                "id": 6,
+                "user_id": 9,
+                "start_location": "Ganit Softech",
+                "start_longitude": "77.0353033",
+                "start_latitude": "28.4657163",
+                "end_location": "Near IGI Airport Terminal 3 Metro Station Indira Gandhi International Airport New Delhi Delhi",
+                "end_longitude": "77.072714",
+                "end_latitude": "28.559314",
+                "timeframe": "30 min",
+                "preference": "best match",
+                "num_of_poolers": "3",
+                "luggage_capacity": "10kg",
+                "expected_fare": "450",
+                "per_person_fare": "150",
+                "seats_full": "0",
+                "created_at": "2018-08-01 05:40:49",
+                "updated_at": "2018-08-01 05:40:49",
+                "start_distance": 0,
+                "end_distance": 1.04,
+                "radius": "2",
+                "first_name": "api",
+                "last_name": "Test",
+                "app_user_id": "sp_bjsd876sadsadj",
+                "gender": "female",
+                "api_token": "Ve9E1Yd0kJgwqsKk",
+                "nature": "intro",
+                "profession": "Business"
+            },
+            {
+                "id": 7,
+                "user_id": 9,
+                "start_location": "Ganit Softech",
+                "start_longitude": "77.0353033",
+                "start_latitude": "28.4657163",
+                "end_location": "Dwarka",
+                "end_longitude": "77.067995",
+                "end_latitude": "28.564289",
+                "timeframe": "30 min",
+                "preference": "female",
+                "num_of_poolers": "3",
+                "luggage_capacity": "10kg",
+                "expected_fare": "450",
+                "per_person_fare": "150",
+                "seats_full": "0",
+                "created_at": "2018-08-01 05:41:16",
+                "updated_at": "2018-08-01 05:41:16",
+                "start_distance": 0,
+                "end_distance": 1.72,
+                "radius": "2",
+                "first_name": "api",
+                "last_name": "Test",
+                "app_user_id": "sp_bjsd876sadsadj",
+                "gender": "female",
+                "api_token": "Ve9E1Yd0kJgwqsKk",
+                "nature": "intro",
+                "profession": "Business"
+            }
+        ]
+    }
+
+12. connectToPool
+
+ URL : 13.81.58.191/dev.smartpool.com/api/action/connectToPool
+ Method : POST
+ Headers : 
+    Content-Type:application/x-www-form-urlencoded
+    Accept:application/json
+    AccessToken:jBAlNasEkPneBete
+ Body : 
+    x-www-form-urlencoded
+    pool_id:1
+ Response :
+    {
+        "status": true,
+        "message": "Pool Rider saved successfully!",
+        "error_code": 200
+    }
+>>>>>>> branch_v

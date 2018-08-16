@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller {
 
@@ -32,6 +33,17 @@ class UserController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
+        $validator = Validator::make($request->all(), [
+                    'email' => 'required|unique:users|max:255',
+                    'phone' => 'required|unique:users|max:10',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('users/create')
+                            ->withErrors($validator)
+                            ->withInput();
+        }
+
         $user = new \App\User;
         $user->first_name = $request->get('first_name');
         $user->last_name = $request->get('last_name');
@@ -74,6 +86,24 @@ class UserController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
+        $validate_fields = [];
+         if (($request->old_email != $request->email)) {
+             $validate_fields['email'] = 'required|unique:users|max:255';
+         }
+         
+         if (($request->old_phone != $request->phone)) {
+             $validate_fields['phone'] = 'required|unique:users|max:10';
+         }
+         
+        if (($request->old_email != $request->email)) {
+            $validator = Validator::make($request->all(), $validate_fields);
+
+            if ($validator->fails()) {
+                return redirect('users/' . $id . '/edit')
+                                ->withErrors($validator)
+                                ->withInput();
+            }
+        }
         $user = \App\User::find($id);
         $user->first_name = $request->get('first_name');
         $user->last_name = $request->get('last_name');
